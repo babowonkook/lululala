@@ -24,7 +24,16 @@ public class HanguoService {
     public String getOrderbook(String type) throws Exception {
         return SslTest.getRequest(orderbookUrl+type, 10000);
     }
-    
+    /**
+     * 
+     * @MethodName  : getTransaction
+     * @Description : 
+     * @Date        : 2017. 6. 15.
+     * @Author      : ¿Ãµø±«
+     * @param type
+     * @return
+     * @throws Exception
+     */
     public String getTransaction(String type) throws Exception {
         return SslTest.getRequest(transactionUrl+type, 10000);
     }
