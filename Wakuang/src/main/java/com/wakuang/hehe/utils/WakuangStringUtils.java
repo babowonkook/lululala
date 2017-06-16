@@ -20,11 +20,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wakuang.hehe.exception.InvalidParameterException;
 
-public class CBTStringUtils {
+public class WakuangStringUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CBTStringUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WakuangStringUtils.class);
 
-    private CBTStringUtils() {
+    private WakuangStringUtils() {
     }
 
     /**
