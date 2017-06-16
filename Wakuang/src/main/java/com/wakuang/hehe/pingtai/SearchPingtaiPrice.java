@@ -1,6 +1,7 @@
 package com.wakuang.hehe.pingtai;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 public abstract interface SearchPingtaiPrice {
 
@@ -35,4 +36,14 @@ public abstract interface SearchPingtaiPrice {
                         String coinType,
                         BigDecimal coinCnt,
                         BigDecimal unitCost);
+
+    /**
+     * @MethodName : getPrice
+     * @Description : 플렛폼 시세구하기
+     * @Date : 2017. 6. 16.
+     * @Author : 황원국
+     * @return
+     * @throws Exception
+     */
+    public Map<String, Map<String, BigDecimal>> getPrice() throws Exception;
 }

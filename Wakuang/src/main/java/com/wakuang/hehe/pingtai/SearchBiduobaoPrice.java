@@ -1,7 +1,15 @@
 package com.wakuang.hehe.pingtai;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.wakuang.hehe.hanguo.util.SslTest;
+import com.wakuang.hehe.utils.WakuangStringUtils;
 
 public class SearchBiduobaoPrice implements SearchPingtaiPrice {
 
@@ -23,10 +31,55 @@ public class SearchBiduobaoPrice implements SearchPingtaiPrice {
         return null;
     }
 
-    public Map<String, Map<String, BigDecimal>> getPrice() {
+    public Map<String, Map<String, BigDecimal>> getPrice() throws Exception {
+        String url = "https://www.biduobao.com/coin/allcoin?t=123123";
+        String html = SslTest.getRequest(url, 3000);
+        JsonNode rootNode = WakuangStringUtils.stringToJsonNode(html);
+        Iterator<Entry<String, JsonNode>> jsonNodes = rootNode.fields();
+        Map coins = new HashMap<String, Map<String, BigDecimal>>();
+        while (jsonNodes.hasNext()) {
+            Entry<String, JsonNode> node = jsonNodes.next();
 
-        // JsonNode rootNode = CBTStringUtils.stringToJsonNode(html);
+            JsonNode values = node.getValue();
+            ArrayNode datas = (ArrayNode) values;
+            if (values.isArray()) {
+                Map coinInfo = new HashMap<String, BigDecimal>();
+                int i = 0;
+                for (final JsonNode objNode : values) {
 
+                    switch (i) {
+                        case 1:
+                            coinInfo.put("PRICE", new BigDecimal(objNode.toString()));
+                            break;
+                        case 2:
+                            coinInfo.put("BUY", new BigDecimal(objNode.toString()));
+                            break;
+                        case 3:
+                            coinInfo.put("SELL", new BigDecimal(objNode.toString()));
+                            break;
+                        case 4:
+                            coinInfo.put("MAX", new BigDecimal(objNode.toString()));
+                            break;
+                        case 5:
+                            coinInfo.put("MIN", new BigDecimal(objNode.toString()));
+                            break;
+                        case 6:
+                            coinInfo.put("SUM", new BigDecimal(objNode.toString()));
+                            break;
+                        case 7:
+                            coinInfo.put("VOLUME", new BigDecimal(objNode.toString()));
+                            break;
+                        default:
+                            break;
+                    }
+                    i++;
+                }
+                System.out.println(coinInfo.toString());
+                coins.put(node.getKey().toString().toUpperCase(), coinInfo);
+            }
+
+        }
+        System.out.println(coins.toString());
         return null;
 
     }
