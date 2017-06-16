@@ -13,14 +13,19 @@ import com.wakuang.hehe.hanguo.util.SslTest;
 import com.wakuang.hehe.utils.WakuangStringUtils;
 
 public class SearchBiduobaoPrice implements SearchPingtaiPrice {
+    private BigDecimal buyFee     = new BigDecimal("0.002");
+    private BigDecimal depositFee = new BigDecimal("0.001");
 
     @Override
     public BigDecimal buyCoin(String plaform,
                               String coinType,
                               BigDecimal totalPrice,
                               BigDecimal unitCost) {
-        // TODO Auto-generated method stub
-        return null;
+        // 전체금액 / 단가 - 매입수수료 - 송금수수료
+        BigDecimal buyCoin = totalPrice.divide(unitCost);
+        BigDecimal aftDivideTrakerFeeCoin =  buyCoin.subtract(getTakerFee(buyCoin, coinType));
+        BigDecimal aftDepositFeeCoin = aftDivideTrakerFeeCoin.subtract(getDepositFee(aftDivideTrakerFeeCoin, coinType));
+        return aftDepositFeeCoin;
     }
 
     @Override
@@ -28,8 +33,11 @@ public class SearchBiduobaoPrice implements SearchPingtaiPrice {
                                String coinType,
                                BigDecimal coinCnt,
                                BigDecimal unitCost) {
-        // TODO Auto-generated method stub
-        return null;
+        // 단가 * 코인갯수 - 판매수수료 - 인출수수료
+        BigDecimal sellMoney = unitCost.multiply(coinCnt);
+        BigDecimal aftTrakerFeeMoney = sellMoney.subtract(getTakerFee(coinCnt, coinType));
+        BigDecimal aftRemittanceFeeMoney = aftTrakerFeeMoney.subtract(BigDecimal.ZERO);
+        return aftRemittanceFeeMoney;
     }
 
     public Map<String, Map<String, BigDecimal>> getPrice() throws Exception {
@@ -83,6 +91,45 @@ public class SearchBiduobaoPrice implements SearchPingtaiPrice {
         System.out.println(coins.toString());
         return null;
 
+    }
+
+    private BigDecimal getTakerFee(BigDecimal amt,
+                                   String coinType) {
+        BigDecimal feeRate = null;
+        switch (coinType) {
+            case ConstantParam.COINTYPE_BTC:
+            case ConstantParam.COINTYPE_LTC:
+                feeRate = new BigDecimal("0.002");
+                break;
+            case ConstantParam.COINTYPE_ETH:
+            case ConstantParam.COINTYPE_DASH:
+            case ConstantParam.COINTYPE_ETC:
+            case ConstantParam.COINTYPE_XRP:
+                feeRate = new BigDecimal("0.001");
+                break;
+            default:
+                feeRate = new BigDecimal("100");
+                break;
+        }
+        return amt.multiply(feeRate);
+    }
+
+    private BigDecimal getDepositFee(BigDecimal amt,
+                                     String coinType) {
+        BigDecimal depositFee = null;
+        switch (coinType) {
+            case ConstantParam.COINTYPE_BTC:
+            case ConstantParam.COINTYPE_LTC:
+            case ConstantParam.COINTYPE_ETH:
+            case ConstantParam.COINTYPE_DASH:
+            case ConstantParam.COINTYPE_ETC:
+            case ConstantParam.COINTYPE_XRP:
+                depositFee = new BigDecimal("0.001");
+            default:
+                depositFee = new BigDecimal("100");
+                break;
+        }
+        return amt.multiply(depositFee);
     }
 
 }

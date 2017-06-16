@@ -1,10 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-	<section name="fee">
-		<entry key="01_01_1" value="0,2" />
-		<entry key="01_01_2" value="0,2" />
-		<entry key="01_01_3" value="0,2" />
-		<entry key="01_03_1" value="0,2" />
-		<entry key="01_03_2" value="0,2" />
+	<section name="BITHUM_FEE">
+		<entry key="SELL" value="0.15%" />
+		<entry key="BUY" value="0.15%" />
+		<entry key="DEPOSIT" value="0" />
+		<entry key="WITHDRAW_KRW" value="1000" />
+		<entry key="WITHDRAW_BTC" value="0.0005" />
+		<entry key="WITHDRAW_ETH" value="0.01" />
+		<entry key="WITHDRAW_DASH" value="0.01" />
+		<entry key="WITHDRAW_LTC" value="0.01" />
+		<entry key="WITHDRAW_ETC" value="0.01" />
+		<entry key="WITHDRAW_XRP" value="0.01" />
+	</section>
+	<section name="BIDUOBAO_FEE">
+		<entry key="SELL_BTC" value="0.2%" />
+		<entry key="BUY_BTC" value="0.2%" />
+		<entry key="SELL_LTC" value="0.2%" />
+		<entry key="BUY_LTC" value="0.2%" />
+		<entry key="SELL_ETH" value="0.1%" />
+		<entry key="BUY_ETH" value="0.1%" />
+		<entry key="SELL_ETC" value="0.1%" />
+		<entry key="BUY_ETC" value="0.1%" />
+		<entry key="SELL_XRP" value="0.1%" />
+		<entry key="BUY_XRP" value="0.1%" />
+		
+		<entry key="DEPOSIT" value="0" />
+		<entry key="WITHDRAW_CNY" value="0.5%" />
+		<entry key="WITHDRAW_BTC" value="0.0005" />
+		<entry key="WITHDRAW_ETH" value="0.01" />
+		<entry key="WITHDRAW_DASH" value="0.01" />
+		<entry key="WITHDRAW_LTC" value="0.01" />
+		<entry key="WITHDRAW_ETC" value="0.01" />
+		<entry key="WITHDRAW_XRP" value="0.01" />
 	</section>
 </configuration>
