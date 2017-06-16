@@ -15,4 +15,8 @@ public class ConstantParam {
     public static final String COINTYPE_LTC      = "LTC";
     public static final String COINTYPE_ETC      = "ETC";
     public static final String COINTYPE_XRP      = "XRP";
+
+    // 수수료유형
+
+    // 금액유형
 }
