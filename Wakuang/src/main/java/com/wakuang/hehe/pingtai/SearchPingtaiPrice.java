@@ -3,13 +3,23 @@ package com.wakuang.hehe.pingtai;
 import java.math.BigDecimal;
 import java.util.Map;
 
-import com.wakuang.hehe.common.ConstantParam;
-
 public abstract interface SearchPingtaiPrice {
-
+	
+	/**
+	 * 交易手续费 
+	 * @param amt
+	 * @param coinType
+	 * @return 币数
+	 */
 	public BigDecimal getTakerFee(BigDecimal amt,
 	            String coinType);
-
+	
+	/**
+	 * 转币手续费 
+	 * @param amt
+	 * @param coinType
+	 * @return 币数
+	 */
 	public BigDecimal getDepositFee(BigDecimal amt,
 	              String coinType);
 

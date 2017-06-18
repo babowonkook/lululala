@@ -7,6 +7,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import com.wakuang.hehe.common.ConstantParam;
+import com.wakuang.hehe.pingtai.PingTaiTradeService;
+import com.wakuang.hehe.utils.WakuangStringUtils;
 
 public class SocketSendMessage implements Runnable {
 	
@@ -16,11 +18,15 @@ public class SocketSendMessage implements Runnable {
 	
 	private Map<WebSocketSession, String> userType;
 	
+	private PingTaiTradeService service;
+	
 	public SocketSendMessage(WebSocketSession user,
-							Map<WebSocketSession, String> userType) {
+							Map<WebSocketSession, String> userType,
+							PingTaiTradeService service) {
 		// TODO Auto-generated constructor stub
 		this.user = user;
 		this.userType = userType;
+		this.service = service;
 	}
 	
 	@Override
@@ -38,8 +44,15 @@ public class SocketSendMessage implements Runnable {
 				if(user == null || !user.isOpen()) {
 					break;
 				}
+				Map<String, Object> rs = service.compare(ConstantParam.PLAFORM_BIDUOBAO, ConstantParam.PLAFORM_BITHUM, "165", "10000000");
+				
 				user.sendMessage(new TextMessage(count+""));
+				
+				user.sendMessage(new TextMessage(WakuangStringUtils.beanToString(rs)));
 			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

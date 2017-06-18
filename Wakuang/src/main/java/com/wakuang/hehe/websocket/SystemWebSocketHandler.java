@@ -16,6 +16,7 @@ import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import com.wakuang.hehe.common.ConstantParam;
+import com.wakuang.hehe.pingtai.PingTaiTradeService;
 
 public class SystemWebSocketHandler implements WebSocketHandler {
 	
@@ -26,6 +27,13 @@ public class SystemWebSocketHandler implements WebSocketHandler {
     private Map<WebSocketSession, String> userType = new ConcurrentHashMap<>();
     
     private ExecutorService ExecutorService;
+    
+    private PingTaiTradeService service;
+    
+    public SystemWebSocketHandler(PingTaiTradeService service) {
+		// TODO Auto-generated constructor stub
+    	this.service = service;
+    }
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus arg1) throws Exception {
@@ -53,7 +61,7 @@ public class SystemWebSocketHandler implements WebSocketHandler {
         if("1".equals(arg1.getPayload().toString()) && userType.get(arg0) == null || ConstantParam.N.equals(userType.get(arg0)) ) {
         	ExecutorService = Executors.newFixedThreadPool(1);
         	userType.put(arg0, ConstantParam.Y);
-        	ExecutorService.execute(new SocketSendMessage(arg0, userType));
+        	ExecutorService.execute(new SocketSendMessage(arg0, userType, service));
         	ExecutorService.shutdown();
         }else if("2".equals(arg1.getPayload().toString())) {
         	userType.put(arg0, ConstantParam.N);

@@ -6,12 +6,15 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.wakuang.hehe.common.ConstantParam;
 import com.wakuang.hehe.hanguo.util.SslTest;
 import com.wakuang.hehe.utils.WakuangStringUtils;
 
+@Service("biduobaoService")
 public class SearchBiduobaoPrice implements SearchPingtaiPrice {
     private BigDecimal buyFee     = new BigDecimal("0.002");
     private BigDecimal depositFee = new BigDecimal("0.001");
@@ -83,13 +86,12 @@ public class SearchBiduobaoPrice implements SearchPingtaiPrice {
                     }
                     i++;
                 }
-                System.out.println(coinInfo.toString());
                 coins.put(node.getKey().toString().toUpperCase(), coinInfo);
             }
 
         }
-        System.out.println(coins.toString());
-        return null;
+        System.out.println(ConstantParam.PLAFORM_BIDUOBAO + ":  " + coins.toString());
+        return coins;
 
     }
     @Override
@@ -125,6 +127,10 @@ public class SearchBiduobaoPrice implements SearchPingtaiPrice {
             case ConstantParam.COINTYPE_ETC:
             case ConstantParam.COINTYPE_XRP:
                 depositFee = new BigDecimal("0.001");
+                break;
+            case ConstantParam.COINTYPE_CASH:
+            	depositFee = new BigDecimal("0.005");
+            	break;
             default:
                 depositFee = new BigDecimal("100");
                 break;

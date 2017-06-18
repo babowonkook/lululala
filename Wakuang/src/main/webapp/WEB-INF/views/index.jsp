@@ -1,7 +1,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ page session="false" %>
 <html>  
 <head>  
+<!-- <script type="text/javascript" src="/resource/js/jquery-3.2.1.js"/> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
 <title>WebSocket/SockJS Echo Sample (Adapted from Tomcat's echo sample)</title>  
     <style type="text/css">  
@@ -67,7 +71,8 @@
             };  
               
             ws.onmessage = function (event) {  
-                log('Received: ' + event.data);  
+                log('Received: ' + event.data);
+                setCoinGrid(event.data);
             };  
               
             ws.onclose = function (event) {  
@@ -125,6 +130,41 @@
             }  
             console.scrollTop = console.scrollHeight;  
         }  
+        
+        function setCoinGrid(data){
+        	var jsonInfo = JSON.parse(data);
+        	var html = "";
+        	
+        
+        	for(var i in jsonInfo)
+        	{
+        		var fromTo = "";
+        		if(jsonInfo[i].compare >= 0){
+        			fromTo = "<font size='3' color='red'>-></font>"
+        		}else{
+        			fromTo = "<font size='3' color='blue'><-</font>"
+        		}
+        		
+        		var trColor = "";
+        		if(jsonInfo[i].shouyi_rate <= 0){
+        			trColor = "bgcolor='gray'";
+        		}else if(jsonInfo[i].shouyi_rate > 0.03){
+        			trColor = "bgcolor='green'";
+        		}
+        	    html = html + "<tr " + trColor + ">";
+        	    html = html + "<td>" + fromTo + "</td>";
+        	    html = html + "<td>" + i + "</td>";
+        	    html = html + "<td>" + jsonInfo[i].map.PRICE + "</td>";
+        	    html = html + "<td>" + jsonInfo[i].map.PRICE + "</td>";
+        	    html = html + "<td>" + jsonInfo[i].map2.PRICE + "</td>";
+        	    html = html + "<td>" + jsonInfo[i].compare + "</td>";
+        	    html = html + "<td>" + jsonInfo[i].shouyi_rate.toFixed(4)*100 + "%</td>";
+        	    html = html + "<td>" + jsonInfo[i].shouyi_e.toFixed(0)/10000 + "</td>";
+        	    
+      		  	html = html + "</tr>";
+        	}
+        	$("#coinInfo tbody").html(html);
+        }
     </script>  
 </head>  
 <body>  
@@ -161,9 +201,37 @@
             <button id="echo" onclick="echo();" disabled="disabled">Echo message</button>  
         </div>  
     </div>  
+
+      
+    <br>
+    <div>
+	    <table id="coinInfo" border="1">
+	    	<thead>
+	    		<tr>
+	    		<th>方向</th>
+	    		<th>币种</th>
+	    		<th>平台1价格</th>
+	    		<th>平台1韩元价格</th>
+	    		<th>平台2价格</th>
+	    		<th>差价</th>
+	    		<th>收益率</th>
+	    		<th>收益额</th>
+	    		</tr>
+	    	</thead>
+	    	<tbody>
+	    	
+	    	</tbody>
+	    </table>
+    </div>
+    
+        <br>
+            <br>
+                <br>
+                    <br>
+                        <br>
     <div id="console-container">  
         <div id="console"></div>  
-    </div>  
+    </div>
 </div>  
 
   
