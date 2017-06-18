@@ -46,11 +46,15 @@
         var ws = null;  
         var url = null;  
         var transports = [];  
+        
+        var thisRate = "165";
   
         function setConnected(connected) {  
             document.getElementById('connect').disabled = connected;  
             document.getElementById('disconnect').disabled = !connected;  
             document.getElementById('echo').disabled = !connected;  
+            document.getElementById('echo1').disabled = !connected;  
+            document.getElementById('echo2').disabled = !connected;  
         }  
   
         function connect() {  
@@ -62,23 +66,23 @@
               
             //ws = new WebSocket('ws://192.168.10.107:8080/mspjapi/webSocketServer');/* (url.indexOf('sockjs') != -1) ?   
                 //new SockJS(url, undefined, {protocols_whitelist: transports}) :  */  
-                ws = new SockJS("http://127.0.0.1:8080/webSocketServer/sockjs");  
+                ws = new SockJS("http://wawakwang.iptime.org:8080/webSocketServer/sockjs");  
                 //console.log("http://192.168.10.107:8080/mspjapi/webSocketServer/sockjs");  
                   
             ws.onopen = function () {  
                 setConnected(true);  
-                log('Info: connection opened.');  
+                $("#message").val('Info: connection opened.');
             };  
               
             ws.onmessage = function (event) {  
-                log('Received: ' + event.data);
+                //log('Received: ' + event.data);
                 setCoinGrid(event.data);
             };  
               
             ws.onclose = function (event) {  
                 setConnected(false);  
-                log('Info: connection closed.');  
-                log(event);  
+                $("#message").val('Info: connection closed.');  
+                //log(event);  
             };  
         }  
   
@@ -90,11 +94,19 @@
             setConnected(false);  
         }  
   
-        function echo() {  
-            if (ws != null) {  
-                var message = document.getElementById('message').value;  
-                log('Sent: ' + message);  
-                ws.send(message);  
+        function echo(msg) {  
+            if (ws != null) {
+            	var rate = $("#rate").val();
+            	var totalPrice = $("#totalPrice").val();
+            	var obj = {
+            		"totalPrice" : totalPrice,
+            		"rate" : rate,
+            		"type" : msg
+            	}
+            	if(rate != "") {
+            		thisRate = rate;
+            	}
+                ws.send(JSON.stringify(obj));  
             } else {  
                 alert('connection not established, please connect.');  
             }  
@@ -155,7 +167,7 @@
         	    html = html + "<td>" + fromTo + "</td>";
         	    html = html + "<td>" + i + "</td>";
         	    html = html + "<td>" + jsonInfo[i].map.PRICE + "</td>";
-        	    html = html + "<td>" + jsonInfo[i].map.PRICE + "</td>";
+        	    html = html + "<td>" + parseFloat(jsonInfo[i].map.PRICE) * parseFloat(thisRate) + "</td>";
         	    html = html + "<td>" + jsonInfo[i].map2.PRICE + "</td>";
         	    html = html + "<td>" + jsonInfo[i].compare + "</td>";
         	    html = html + "<td>" + jsonInfo[i].shouyi_rate.toFixed(4)*100 + "%</td>";
@@ -194,11 +206,17 @@
             <button id="connect" onclick="connect();">Connect</button>  
             <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>  
         </div>  
+        <div>
+        	汇率: <input type="text" value="" id="rate" /> <br>
+        	投入价格： <input type="text" id="totalPrice" />
+        </div>
         <div>  
             <textarea id="message" style="width: 350px">Here is a message!</textarea>  
         </div>  
         <div>  
-            <button id="echo" onclick="echo();" disabled="disabled">Echo message</button>  
+            <button id="echo" onclick="echo();" disabled="disabled">Echo message</button>
+            <button id="echo1" onclick="echo('1');" disabled="disabled">START</button>
+            <button id="echo2" onclick="echo('2');" disabled="disabled">END</button>
         </div>  
     </div>  
 
@@ -208,14 +226,14 @@
 	    <table id="coinInfo" border="1">
 	    	<thead>
 	    		<tr>
-	    		<th>方向</th>
-	    		<th>币种</th>
+	    		<th width="50">方向</th>
+	    		<th width="60">币种</th>
 	    		<th>平台1价格</th>
 	    		<th>平台1韩元价格</th>
 	    		<th>平台2价格</th>
 	    		<th>差价</th>
-	    		<th>收益率</th>
-	    		<th>收益额</th>
+	    		<th width="50">收益率</th>
+	    		<th width="60">收益额</th>
 	    		</tr>
 	    	</thead>
 	    	<tbody>
@@ -224,14 +242,14 @@
 	    </table>
     </div>
     
-        <br>
+<!--         <br>
             <br>
                 <br>
                     <br>
                         <br>
     <div id="console-container">  
         <div id="console"></div>  
-    </div>
+    </div> -->
 </div>  
 
   

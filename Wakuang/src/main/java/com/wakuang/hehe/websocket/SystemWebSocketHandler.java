@@ -15,8 +15,10 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.wakuang.hehe.common.ConstantParam;
 import com.wakuang.hehe.pingtai.PingTaiTradeService;
+import com.wakuang.hehe.utils.WakuangStringUtils;
 
 public class SystemWebSocketHandler implements WebSocketHandler {
 	
@@ -48,9 +50,7 @@ public class SystemWebSocketHandler implements WebSocketHandler {
 		System.out.println("ConnectionEstablished");  
         log.debug("ConnectionEstablished");  
         users.add(session);  
-          
-        session.sendMessage(new TextMessage("connect"));  
-        session.sendMessage(new TextMessage("new_msg")); 
+ 
 	}
 
 	@Override
@@ -58,12 +58,19 @@ public class SystemWebSocketHandler implements WebSocketHandler {
 		// TODO Auto-generated method stub
 		System.out.println("handleMessage" + arg1.toString());  
         log.debug("handleMessage" + arg1.toString());
-        if("1".equals(arg1.getPayload().toString()) && userType.get(arg0) == null || ConstantParam.N.equals(userType.get(arg0)) ) {
+        JsonNode jsonNode = WakuangStringUtils.stringToJsonNode(arg1.getPayload().toString());
+        if(jsonNode == null) {
+        	return;
+        }
+        String type = jsonNode.get("type").asText();
+        String rate = jsonNode.get("rate").asText();
+        String totalPrice = jsonNode.get("totalPrice").asText();
+        if("1".equals(type) && userType.get(arg0) == null || ConstantParam.N.equals(userType.get(arg0)) ) {
         	ExecutorService = Executors.newFixedThreadPool(1);
         	userType.put(arg0, ConstantParam.Y);
-        	ExecutorService.execute(new SocketSendMessage(arg0, userType, service));
+        	ExecutorService.execute(new SocketSendMessage(arg0, userType, service, rate, totalPrice));
         	ExecutorService.shutdown();
-        }else if("2".equals(arg1.getPayload().toString())) {
+        }else if("2".equals(type)) {
         	userType.put(arg0, ConstantParam.N);
         }
 	}
