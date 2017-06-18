@@ -6,8 +6,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-import org.codehaus.jackson.map.ObjectMapper;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.InvalidKeyException;
@@ -18,6 +16,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @SuppressWarnings("unused")
@@ -32,7 +32,7 @@ public class Api_Client {
     }
 
     /**
-     * ÇöÀçÀÇ ½Ã°£À» ns·Î ¸®ÅÏÇÑ´Ù.(1/1,000,000,000 ÃÊ)
+     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ nsï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.(1/1,000,000,000 ï¿½ï¿½)
      * 
      * @return int
      */
@@ -55,7 +55,7 @@ public class Api_Client {
     private String request(String strHost, String strMemod, HashMap<String, String> rgParams,  HashMap<String, String> httpHeaders) {
     	String response = "";
 
-		// SSL ¿©ºÎ
+		// SSL ï¿½ï¿½ï¿½ï¿½
 		if (strHost.startsWith("https://")) {
 		    HttpRequest request = HttpRequest.get(strHost);
 		    // Accept all certificates
@@ -68,7 +68,7 @@ public class Api_Client {
 		} else {
 		    HttpRequest request = null;
 	
-		    // POST/GET ¼³Á¤
+		    // POST/GET ï¿½ï¿½ï¿½ï¿½
 		    if (strMemod.toUpperCase().equals("POST")) {
 	
 			request = new HttpRequest(strHost, "POST");
@@ -208,13 +208,13 @@ public class Api_Client {
 		rgResultDecode = request(api_host, "POST", rgParams, httpHeaders);
 	
 		if (!rgResultDecode.startsWith("error")) {
-		    // json ÆÄ½Ì
+		    // json ï¿½Ä½ï¿½
 		    HashMap<String, String> result;
 		    try {
 			result = new ObjectMapper().readValue(rgResultDecode,
 				HashMap.class);
 	
-			System.out.println("==== °á°ú Ãâ·Â ====");
+			System.out.println("==== ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ====");
 			System.out.println(result.get("status"));
 		    } catch (IOException e) {
 			e.printStackTrace();

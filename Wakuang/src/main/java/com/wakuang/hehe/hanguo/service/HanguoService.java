@@ -1,11 +1,9 @@
 package com.wakuang.hehe.hanguo.service;
 
-import java.io.IOException;
-import java.util.HashMap;
+
 
 import org.springframework.stereotype.Service;
 
-import com.wakuang.hehe.hanguo.util.HttpUtil;
 import com.wakuang.hehe.hanguo.util.SslTest;
 
 @Service
@@ -29,7 +27,7 @@ public class HanguoService {
      * @MethodName  : getTransaction
      * @Description : 
      * @Date        : 2017. 6. 15.
-     * @Author      : ÀÌµ¿±Ç
+     * @Author      : ï¿½Ìµï¿½ï¿½ï¿½
      * @param type
      * @return
      * @throws Exception
