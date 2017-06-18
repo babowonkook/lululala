@@ -16,7 +16,7 @@ public class SearchBiduobaoPrice implements SearchPingtaiPrice {
     private BigDecimal buyFee     = new BigDecimal("0.002");
     private BigDecimal depositFee = new BigDecimal("0.001");
 
-    @Override
+    
     public BigDecimal buyCoin(String plaform,
                               String coinType,
                               BigDecimal totalPrice,
@@ -28,7 +28,7 @@ public class SearchBiduobaoPrice implements SearchPingtaiPrice {
         return aftDepositFeeCoin;
     }
 
-    @Override
+    
     public BigDecimal sellCoin(String plaform,
                                String coinType,
                                BigDecimal coinCnt,
@@ -92,8 +92,8 @@ public class SearchBiduobaoPrice implements SearchPingtaiPrice {
         return null;
 
     }
-
-    private BigDecimal getTakerFee(BigDecimal amt,
+    @Override
+    public BigDecimal getTakerFee(BigDecimal amt,
                                    String coinType) {
         BigDecimal feeRate = null;
         switch (coinType) {
@@ -113,8 +113,8 @@ public class SearchBiduobaoPrice implements SearchPingtaiPrice {
         }
         return amt.multiply(feeRate);
     }
-
-    private BigDecimal getDepositFee(BigDecimal amt,
+    @Override
+    public BigDecimal getDepositFee(BigDecimal amt,
                                      String coinType) {
         BigDecimal depositFee = null;
         switch (coinType) {
