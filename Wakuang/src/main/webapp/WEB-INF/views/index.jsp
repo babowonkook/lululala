@@ -47,6 +47,8 @@
         var url = null;  
         var transports = [];  
         
+        var onload = false;
+        
         var thisRate = "165";
   
         function setConnected(connected) {  
@@ -95,11 +97,19 @@
         }  
   
         function echo(msg) {  
+        	if(msg == 1) {
+        		onload = true;
+        		document.getElementById('echo1').disabled = true;
+        	}else if(msg == 2) {
+        		onload = false;
+        		document.getElementById('echo1').disabled = false;
+        	}
+        	
             if (ws != null) {
             	var rate = $("#rate").val();
             	var totalPrice = $("#totalPrice").val();
             	var obj = {
-            		"totalPrice" : totalPrice,
+            		"totalPrice" : totalPrice*10000,
             		"rate" : rate,
             		"type" : msg
             	}
@@ -166,17 +176,44 @@
         	    html = html + "<tr " + trColor + ">";
         	    html = html + "<td>" + fromTo + "</td>";
         	    html = html + "<td>" + i + "</td>";
-        	    html = html + "<td>" + jsonInfo[i].map.PRICE + "</td>";
-        	    html = html + "<td>" + parseFloat(jsonInfo[i].map.PRICE) * parseFloat(thisRate) + "</td>";
-        	    html = html + "<td>" + jsonInfo[i].map2.PRICE + "</td>";
-        	    html = html + "<td>" + jsonInfo[i].compare + "</td>";
-        	    html = html + "<td>" + jsonInfo[i].shouyi_rate.toFixed(4)*100 + "%</td>";
-        	    html = html + "<td>" + jsonInfo[i].shouyi_e.toFixed(0)/10000 + "</td>";
+        	    html = html + "<td>" + formatMoney(jsonInfo[i].map.PRICE, true) + "</td>";
+        	    html = html + "<td>" + formatMoney(parseFloat((jsonInfo[i].map.PRICE) * parseFloat(thisRate))+"", true) + "</td>";
+        	    html = html + "<td>" + formatMoney(jsonInfo[i].map2.PRICE, true) + "</td>";
+        	    html = html + "<td>" + formatMoney(jsonInfo[i].compare, true) + "</td>";
+        	    html = html + "<td>" + ((jsonInfo[i].shouyi_rate*100).toFixed(4)) + "%</td>";
+        	    html = html + "<td>" + formatMoney(jsonInfo[i].shouyi_e.toFixed(0)/10000, true) + "</td>";
         	    
       		  	html = html + "</tr>";
         	}
         	$("#coinInfo tbody").html(html);
         }
+        
+        function rmoney(s) {  
+        	s = s + "";
+            return parseFloat(s.replace(/[^\d\.-]/g, ""));  
+        } 
+        
+        function formatMoney(s, type) {  
+        	s = s+"";
+            if (/[^0-9\.]/.test(s))  
+                return "0";  
+            if (s == null || s == "")  
+                return "0";  
+            s = s.toString().replace(/^(\d*)$/, "$1.");  
+            s = (s + "00").replace(/(\d*\.\d\d)\d*/, "$1");  
+            s = s.replace(".", ",");  
+            var re = /(\d)(\d{3},)/;  
+            while (re.test(s))  
+                s = s.replace(re, "$1,$2");  
+            s = s.replace(/,(\d\d)$/, ".$1");  
+            if (type == 0) {// 不带小数位(默认是有小数位)  
+                var a = s.split(".");  
+                if (a[1] == "00") {  
+                    s = a[0];  
+                }  
+            }  
+            return s;  
+        } 
     </script>  
 </head>  
 <body>  
@@ -207,14 +244,14 @@
             <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>  
         </div>  
         <div>
-        	汇率: <input type="text" value="" id="rate" /> <br>
-        	投入价格： <input type="text" id="totalPrice" />
+        	汇率: <input type="text" value="165" id="rate" /> <br>
+        	投入价格： <input type="text" value="1000" id="totalPrice" />
         </div>
         <div>  
             <textarea id="message" style="width: 350px">Here is a message!</textarea>  
         </div>  
         <div>  
-            <button id="echo" onclick="echo();" disabled="disabled">Echo message</button>
+            <button style="display: none;" id="echo" onclick="echo();" disabled="disabled">Echo message</button>
             <button id="echo1" onclick="echo('1');" disabled="disabled">START</button>
             <button id="echo2" onclick="echo('2');" disabled="disabled">END</button>
         </div>  
