@@ -68,7 +68,7 @@
               
             //ws = new WebSocket('ws://192.168.10.107:8080/mspjapi/webSocketServer');/* (url.indexOf('sockjs') != -1) ?   
                 //new SockJS(url, undefined, {protocols_whitelist: transports}) :  */  
-                ws = new SockJS("http://wawakwang.iptime.org:8080/webSocketServer/sockjs");  
+                ws = new SockJS("/webSocketServer/sockjs");  
                 //console.log("http://192.168.10.107:8080/mspjapi/webSocketServer/sockjs");  
                   
             ws.onopen = function () {  
@@ -214,6 +214,36 @@
             }  
             return s;  
         } 
+        
+        function jiSuanQi() {
+        	$.ajax({
+        	     type: 'GET',
+        	     url: '/home/yieldRate' ,
+        	     data: {
+        	    	 "buy_price":$("#buyPrice").val(),
+        	    	 "buyPlatform":$("#buyPlatform").val(),
+        	    	 "coinType":$("#coinType").val(),
+        	    	 "buyNum":$("#buyNum").val(),
+        	    	 "sellPlatform":$("#sellPlatform").val(),
+        	    	 "sell_price":$("#sellPrice").val(),
+        	    	 "rate":$("#rate").val()
+        	     } ,
+        	     success: function(data) {
+        	    	 console.info(data);
+        	    	 if(data.resultCode = "000") {
+        	    		 var rs = data.result;
+        	    		 $("#yieldRate").val((rs.shouyi_rate*100)+" %");
+        	    		 
+        	    		 $("#yieldRatePrice").val(formatMoney(rs.shouyi_e,true));
+        	    		 $("#yieldRatePriceYuan").val(formatMoney(rs.shouyiEyuan,true));
+        	    		 
+        	    		 $("#tikuanKrp").val(formatMoney(rs.tikuanShouxuFei,true));
+        	    		 $("#tikuanCny").val(formatMoney(rs.tikuanShouxuFeiYuan,true));
+        	    	 }
+        	     } ,
+        	     dataType: 'json'
+        	});
+        }
     </script>  
 </head>  
 <body>  
@@ -259,7 +289,7 @@
 
       
     <br>
-    <div>
+    <div style="float: left; ">
 	    <table id="coinInfo" border="1">
 	    	<thead>
 	    		<tr>
@@ -287,7 +317,127 @@
     <div id="console-container">  
         <div id="console"></div>  
     </div> -->
-</div>  
+</div> 
+
+<div style="width: 100%; float: left; margin-top: 30px; " >
+	<table style="">
+		<thead>
+			<tr>
+				<th colspan="2">收益计算器</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>请选择买入的平台:</td>
+				<td>
+					<select id="buyPlatform">
+						<option value='BIDUOBAO'>币多宝</option>
+						<option value='BITHUM'>BITHUM</option>
+					</select>
+				</td>
+				
+			</tr>
+			
+			<tr>
+				<td>请选择币种:</td>
+				<td>
+					<select id="coinType">
+						<option value='BTC'>比特币</option>
+						<option value='ETH'>以太坊</option>
+						<option value='XRP'>瑞波币</option>
+						<option value='LTC'>莱特币</option>
+						<option value='ETC'>以太经典</option>
+					</select>
+				</td>
+				
+			</tr>
+			
+			<tr>
+				<td>买入价:</td>
+				<td>
+					<input value="" type="text" id="buyPrice" />
+				</td>
+				
+			</tr>
+			
+			
+			<tr>
+				<td>买入个数:</td>
+				<td>
+					<input value="" type="text" id="buyNum" />
+				</td>
+				
+			</tr>
+			
+			<tr>
+				<td>请选择卖出的平台:</td>
+				<td>
+					<select id="sellPlatform">
+						<option value='BIDUOBAO'>币多宝</option>
+						<option value='BITHUM'>BITHUM</option>
+					</select>
+				</td>
+				
+			</tr>
+			
+			<tr>
+				<td>卖出价:</td>
+				<td>
+					<input value="" type="text" id="sellPrice" />
+				</td>
+				
+			</tr>
+			
+			<tr>
+				<td colspan="2">
+					<input onclick="jiSuanQi();" type="button" value=" 计  算  "  />
+				</td>
+
+				
+			</tr>
+			
+			<tr>
+				<td>收益率:</td>
+				<td>
+					<input value="" type="text" id="yieldRate" readonly="readonly" />
+				</td>
+				
+			</tr>
+			
+			<tr>
+				<td>最终收益(krp):</td>
+				<td>
+					<input value="" type="text" id="yieldRatePrice" readonly="readonly" />
+				</td>
+				
+			</tr>
+			
+			<tr>
+				<td>最终收益(cny):</td>
+				<td>
+					<input value="" type="text" id="yieldRatePriceYuan" readonly="readonly" />
+				</td>
+				
+			</tr>
+			
+			<tr>
+				<td>提款手续费(krp):</td>
+				<td>
+					<input value="" type="text" id="tikuanKrp" readonly="readonly" />
+				</td>
+				
+			</tr>
+			
+			<tr>
+				<td>提款手续费(cny):</td>
+				<td>
+					<input value="" type="text" id="tikuanCny" readonly="readonly" />
+				</td>
+				
+			</tr>
+		</tbody>
+	</table>
+</div>
 
   
 </body>  

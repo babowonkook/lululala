@@ -17,6 +17,13 @@ public class ConstantParam {
 	public static final String COINTYPE_XRP = "XRP";
 	public static final String COINTYPE_CASH = "CASH";
 
+	public static final String COINTYPE = "coinType";
+	public static final String BUY_NUM = "buyNum";
+
+	public static final String BUY_PLATFORM = "buyPlatform";
+	public static final String SELL_PLATFORM = "sellPlatform";
+	public static final String RATE = "rate";
+
 	// 수수료유형
 	// 입금수수료, 인출수수료, 판매수수료, 구매수수료, 코인송금수수료,
 	public static final String CHARGE_DEPOSIT = "DEPOSIT";
@@ -39,7 +46,9 @@ public class ConstantParam {
 	public static final String MAP2 = "map2";
 	public static final String SHOUYI_E = "shouyi_e";
 	public static final String SHOUYI_RATE = "shouyi_rate";
-	
+	public static final String TIKUAN_SHOUXU_FEI = "tikuanShouxuFei";
+	public static final String TIKUAN_SHOUXU_FEI_YUAN = "tikuanShouxuFeiYuan";
+	public static final String SHOUYI_E_YUAN = "shouyiEyuan";
 
 	public static final String STATUS = "status";
 	public static final String MIN_PRICE = "min_price";
