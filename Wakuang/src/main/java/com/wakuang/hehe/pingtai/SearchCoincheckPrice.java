@@ -14,8 +14,8 @@ import com.wakuang.hehe.common.ConstantParam;
 import com.wakuang.hehe.hanguo.util.SslTest;
 import com.wakuang.hehe.utils.WakuangStringUtils;
 
-@Service("biduobaoService")
-public class SearchBiduobaoPrice implements SearchPingtaiPrice {
+@Service("coincheckService")
+public class SearchCoincheckPrice implements SearchPingtaiPrice {
     public Map<String, Map<String, BigDecimal>> getPrice() throws Exception {
         String url = "https://www.biduobao.com/coin/allcoin?t=123123";
         String html = SslTest.getRequest(url, 3000);
