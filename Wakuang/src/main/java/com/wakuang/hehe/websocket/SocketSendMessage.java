@@ -1,12 +1,17 @@
 package com.wakuang.hehe.websocket;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.wakuang.hehe.common.ConstantParam;
 import com.wakuang.hehe.pingtai.PingTaiTradeService;
 import com.wakuang.hehe.utils.WakuangStringUtils;
@@ -62,7 +67,18 @@ public class SocketSendMessage implements Runnable {
 				}
 				Map<String, Object> rs = service.compare(ConstantParam.PLAFORM_BIDUOBAO, ConstantParam.PLAFORM_BITHUM, rate, totalPrice);
 				
-				user.sendMessage(new TextMessage(WakuangStringUtils.beanToString(rs)));
+				Date date = new Date();
+				DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG);
+				String systemTime = dateFormat.format(date);
+				
+				ObjectMapper mapper = new ObjectMapper();
+				ObjectNode jsonRoot = mapper.createObjectNode();
+				
+				jsonRoot.put("STATUS", "SUCCESS");
+				jsonRoot.put("SYSTEM_TIME", systemTime);
+				jsonRoot.put("COMPAIRE_DATA", WakuangStringUtils.beanToString(rs));
+				System.out.println(jsonRoot.toString());
+				user.sendMessage(new TextMessage(jsonRoot.toString()));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

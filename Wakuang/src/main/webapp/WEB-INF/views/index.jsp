@@ -155,33 +155,34 @@
         
         function setCoinGrid(data){
         	var jsonInfo = JSON.parse(data);
+        	$("#sysTime").html(jsonInfo.SYSTEM_TIME);
         	var html = "";
         	
-        
-        	for(var i in jsonInfo)
+        	var result = JSON.parse(jsonInfo.COMPAIRE_DATA);
+        	for(var i in result)
         	{
         		var fromTo = "";
-        		if(jsonInfo[i].compare >= 0){
+        		if(result[i].compare >= 0){
         			fromTo = "<font size='3' color='red'>-></font>"
         		}else{
         			fromTo = "<font size='3' color='blue'><-</font>"
         		}
         		
         		var trColor = "";
-        		if(jsonInfo[i].shouyi_rate <= 0){
+        		if(result[i].shouyi_rate <= 0){
         			trColor = "bgcolor='gray'";
-        		}else if(jsonInfo[i].shouyi_rate > 0.03){
+        		}else if(result[i].shouyi_rate > 0.03){
         			trColor = "bgcolor='green'";
         		}
         	    html = html + "<tr " + trColor + ">";
         	    html = html + "<td>" + fromTo + "</td>";
         	    html = html + "<td>" + i + "</td>";
-        	    html = html + "<td>" + formatMoney(jsonInfo[i].map.PRICE, true) + "</td>";
-        	    html = html + "<td>" + formatMoney(parseFloat((jsonInfo[i].map.PRICE) * parseFloat(thisRate))+"", true) + "</td>";
-        	    html = html + "<td>" + formatMoney(jsonInfo[i].map2.PRICE, true) + "</td>";
-        	    html = html + "<td>" + formatMoney(jsonInfo[i].compare, true) + "</td>";
-        	    html = html + "<td>" + ((jsonInfo[i].shouyi_rate*100).toFixed(4)) + "%</td>";
-        	    html = html + "<td>" + formatMoney(jsonInfo[i].shouyi_e.toFixed(0)/10000, true) + "</td>";
+        	    html = html + "<td>" + formatMoney(result[i].map.PRICE, true) + "</td>";
+        	    html = html + "<td>" + formatMoney(parseFloat((result[i].map.PRICE) * parseFloat(thisRate))+"", true) + "</td>";
+        	    html = html + "<td>" + formatMoney(result[i].map2.PRICE, true) + "</td>";
+        	    html = html + "<td>" + formatMoney(result[i].compare, true) + "</td>";
+        	    html = html + "<td>" + ((result[i].shouyi_rate*100).toFixed(4)) + "%</td>";
+        	    html = html + "<td>" + formatMoney(result[i].shouyi_e.toFixed(0)/10000, true) + "</td>";
         	    
       		  	html = html + "</tr>";
         	}
@@ -285,6 +286,8 @@
             <button id="echo1" onclick="echo('1');" disabled="disabled">START</button>
             <button id="echo2" onclick="echo('2');" disabled="disabled">END</button>
         </div>  
+        
+        <div>갱신시간 : <div id="sysTime"></div></div>
     </div>  
 
       
