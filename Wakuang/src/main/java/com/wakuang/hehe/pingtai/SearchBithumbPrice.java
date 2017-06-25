@@ -40,7 +40,7 @@ public class SearchBithumbPrice implements SearchPingtaiPrice {
 	}
 
 	@Override
-	public BigDecimal getDepositFee(BigDecimal amt, String coinType) {
+	public BigDecimal getDepositFee(BigDecimal amt, String coinType, String tufaQingkuang) {
 		// TODO Auto-generated method stub
 		 BigDecimal depositFee = null;
 	        switch (coinType) {
@@ -61,6 +61,9 @@ public class SearchBithumbPrice implements SearchPingtaiPrice {
 	                depositFee = new BigDecimal("100");
 	                break;
 	        }
+	        if("yes".equals(tufaQingkuang)) {
+	    		depositFee = new BigDecimal("0.02");
+	    	}
 	        return depositFee;
 	}
 

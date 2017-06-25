@@ -90,7 +90,8 @@ public class SearchBiduobaoPrice implements SearchPingtaiPrice {
     }
     @Override
     public BigDecimal getDepositFee(BigDecimal amt,
-                                     String coinType) {
+                                     String coinType,
+                                     String tufaQingkuang) {
         BigDecimal depositFee = null;
         switch (coinType) {
             case ConstantParam.COINTYPE_BTC:
@@ -108,6 +109,9 @@ public class SearchBiduobaoPrice implements SearchPingtaiPrice {
                 depositFee = new BigDecimal("100");
                 break;
         }
+    	if("yes".equals(tufaQingkuang)) {
+    		depositFee = new BigDecimal("0.02");
+    	}
         return amt.multiply(depositFee);
     }
 

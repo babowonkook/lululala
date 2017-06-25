@@ -50,6 +50,8 @@
         var onload = false;
         
         var thisRate = "165";
+        
+        var tk = "yes";
   
         function setConnected(connected) {  
             document.getElementById('connect').disabled = connected;  
@@ -60,6 +62,9 @@
         }  
   
         function connect() {  
+        	if('${param.tk}' != '') {
+        		tk = '${param.tk}';
+        	}
 /*             if (!url) {  
                 alert('Select whether to use W3C WebSocket or SockJS');  
                 return;  
@@ -111,7 +116,8 @@
             	var obj = {
             		"totalPrice" : totalPrice*10000,
             		"rate" : rate,
-            		"type" : msg
+            		"type" : msg,
+            		"tufaQingkuang" : tk
             	}
             	if(rate != "") {
             		thisRate = rate;

@@ -24,14 +24,15 @@ public class PingTaiTradeService {
     public BigDecimal buyCoin(String plaform,
             String coinType,
             BigDecimal totalPrice,
-            BigDecimal unitCost) {
+            BigDecimal unitCost,
+            String tk) {
     	Map<String, SearchPingtaiPrice> serviceMap = initService();
     	SearchPingtaiPrice searchPingtaiPrice = serviceMap.get(plaform);
     	
 		// 전체금액 / 단가 - 매입수수료 - 송금수수료
 		BigDecimal buyCoin = totalPrice.divide(unitCost,8,BigDecimal.ROUND_HALF_UP);
 		BigDecimal aftDivideTrakerFeeCoin =  buyCoin.subtract(searchPingtaiPrice.getTakerFee(buyCoin, coinType));
-		BigDecimal aftDepositFeeCoin = aftDivideTrakerFeeCoin.subtract(searchPingtaiPrice.getDepositFee(aftDivideTrakerFeeCoin, coinType));
+		BigDecimal aftDepositFeeCoin = aftDivideTrakerFeeCoin.subtract(searchPingtaiPrice.getDepositFee(aftDivideTrakerFeeCoin, coinType, tk));
 		return aftDepositFeeCoin;
     }
 
@@ -39,20 +40,22 @@ public class PingTaiTradeService {
 	public BigDecimal sellCoin(String plaform,
 	             String coinType,
 	             BigDecimal coinCnt,
-	             BigDecimal unitCost) {
+	             BigDecimal unitCost,
+	             String tk) {
 		Map<String, SearchPingtaiPrice> serviceMap = initService();
 		SearchPingtaiPrice searchPingtaiPrice = serviceMap.get(plaform);		
 		// 단가 * 코인갯수 - 판매수수료 - 인출수수료
 		BigDecimal sellMoney = unitCost.multiply(coinCnt);
 		BigDecimal aftTrakerFeeMoney = sellMoney.subtract(searchPingtaiPrice.getTakerFee(sellMoney, coinType));
-		BigDecimal aftRemittanceFeeMoney = aftTrakerFeeMoney.subtract(searchPingtaiPrice.getDepositFee(aftTrakerFeeMoney, ConstantParam.COINTYPE_CASH));
+		BigDecimal aftRemittanceFeeMoney = aftTrakerFeeMoney.subtract(searchPingtaiPrice.getDepositFee(aftTrakerFeeMoney, ConstantParam.COINTYPE_CASH, tk));
 		return aftRemittanceFeeMoney;
 	}
 	
 	public Map<String, Object> compare(String pingTaiTp,
 							  String pingTaiTp2,
 							  String rate,
-							  String amt) throws Exception {
+							  String amt,
+							  String tk) throws Exception {
 		String coinTypes[] = {ConstantParam.COINTYPE_BTC, ConstantParam.COINTYPE_ETH, ConstantParam.COINTYPE_LTC, ConstantParam.COINTYPE_DASH, ConstantParam.COINTYPE_ETC, ConstantParam.COINTYPE_XRP};
 		BigDecimal rateChange = new BigDecimal(rate);
 		BigDecimal totalPrice = new BigDecimal(amt);
@@ -78,15 +81,15 @@ public class PingTaiTradeService {
 				
 				// 收益率， 收益额
 				if(compareValue.compareTo(BigDecimal.ZERO) == 1){
-					BigDecimal coinCnt = buyCoin(pingTaiTp, coin, totalPrice, coinMap.get(ConstantParam.COIN_INFO_PRICE).multiply(rateChange));
-					BigDecimal sellAmt = sellCoin(pingTaiTp2, coin, coinCnt, coinMap2.get(ConstantParam.COIN_INFO_PRICE));
+					BigDecimal coinCnt = buyCoin(pingTaiTp, coin, totalPrice, coinMap.get(ConstantParam.COIN_INFO_PRICE).multiply(rateChange), tk);
+					BigDecimal sellAmt = sellCoin(pingTaiTp2, coin, coinCnt, coinMap2.get(ConstantParam.COIN_INFO_PRICE), tk);
 					BigDecimal shouYi_e = sellAmt.subtract(totalPrice);
 					BigDecimal shouYiRate = shouYi_e.divide(totalPrice,4,BigDecimal.ROUND_HALF_UP);
 					temp.put(ConstantParam.SHOUYI_E, shouYi_e.setScale(0, BigDecimal.ROUND_HALF_UP));
 					temp.put(ConstantParam.SHOUYI_RATE, shouYiRate.setScale(4, BigDecimal.ROUND_HALF_UP));
 				}else{
-					BigDecimal coinCnt = buyCoin(pingTaiTp2, coin, totalPrice, coinMap2.get(ConstantParam.COIN_INFO_PRICE));
-					BigDecimal sellAmt = sellCoin(pingTaiTp, coin, coinCnt, coinMap.get(ConstantParam.COIN_INFO_PRICE));
+					BigDecimal coinCnt = buyCoin(pingTaiTp2, coin, totalPrice, coinMap2.get(ConstantParam.COIN_INFO_PRICE), tk);
+					BigDecimal sellAmt = sellCoin(pingTaiTp, coin, coinCnt, coinMap.get(ConstantParam.COIN_INFO_PRICE) , tk);
 					BigDecimal shouYi_e = sellAmt.multiply(rateChange).subtract(totalPrice);
 					BigDecimal shouYiRate = shouYi_e.divide(totalPrice,4,BigDecimal.ROUND_HALF_UP);
 					temp.put(ConstantParam.SHOUYI_E, shouYi_e.setScale(0, BigDecimal.ROUND_HALF_UP));

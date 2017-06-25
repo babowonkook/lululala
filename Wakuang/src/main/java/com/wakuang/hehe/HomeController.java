@@ -58,11 +58,12 @@ public class HomeController {
 							@RequestParam(defaultValue = "", value = ConstantParam.BUY_NUM, required = false) String buyNum,
 							@RequestParam(defaultValue = "", value = ConstantParam.SELL_PLATFORM, required = false) String sellPlatform,
 							@RequestParam(defaultValue = "", value = ConstantParam.SELL_PRICE, required = false) String sellPrice,
-							@RequestParam(defaultValue = "", value = ConstantParam.RATE, required = false) String rate) {
+							@RequestParam(defaultValue = "", value = ConstantParam.RATE, required = false) String rate,
+							@RequestParam(defaultValue = "", value = "tufaQingkuang", required = false) String tk) {
 		WakuangResult result = new WakuangResult();
 		BigDecimal totalPrice = new BigDecimal(buyPrice).multiply(new BigDecimal(buyNum));
-		BigDecimal coinNum = service.buyCoin(buyPlatform, coinType, totalPrice, new BigDecimal(buyPrice));
-		BigDecimal zuiZhongPrice = service.sellCoin(sellPlatform, coinType, coinNum, new BigDecimal(sellPrice));
+		BigDecimal coinNum = service.buyCoin(buyPlatform, coinType, totalPrice, new BigDecimal(buyPrice), tk);
+		BigDecimal zuiZhongPrice = service.sellCoin(sellPlatform, coinType, coinNum, new BigDecimal(sellPrice), tk);
 		BigDecimal shouxufei = new BigDecimal("0");
 		if(!ConstantParam.PLAFORM_BITHUM.equals(buyPlatform)) {
 			totalPrice = totalPrice.multiply(new BigDecimal(rate));
@@ -82,6 +83,15 @@ public class HomeController {
 		result.setResult(rs);
 		result.setResultCode("000");
 		return result;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/getData")
+	public Object getData(@RequestParam(defaultValue = "", value = ConstantParam.RATE, required = false) String rate,
+						  @RequestParam(defaultValue = "", value = ConstantParam.BUY_PRICE, required = false) String buyPrice,
+						  @RequestParam(defaultValue = "", value = "tufaQingkuang", required = false) String tk) throws Exception {
+		Map<String, Object> rs = service.compare(ConstantParam.PLAFORM_BIDUOBAO, ConstantParam.PLAFORM_BITHUM, rate, buyPrice, tk);
+		return rs;
 	}
 	
 }

@@ -21,7 +21,8 @@ public abstract interface SearchPingtaiPrice {
 	 * @return 币数
 	 */
 	public BigDecimal getDepositFee(BigDecimal amt,
-	              String coinType);
+	              String coinType,
+	              String tufaQingkuang);
 
 	/**
 	 * @MethodName : getPrice
