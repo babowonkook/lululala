@@ -50,6 +50,20 @@ public class HomeController {
 		return "index";
 	}
 	
+	@RequestMapping(value = "/buyao", method = RequestMethod.GET)
+	public String buyao(Locale locale, Model model) {
+		logger.info("Welcome home! The client locale is {}.", locale);
+		
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+		
+		String formattedDate = dateFormat.format(date);
+		
+		model.addAttribute("serverTime", formattedDate );
+		
+		return "index2";
+	}
+	
 	@RequestMapping(value = "/yieldRate", method = RequestMethod.GET)
 	@ResponseBody
 	public Object yieldRate(@RequestParam(defaultValue = "", value = ConstantParam.BUY_PRICE, required = false) String buyPrice,

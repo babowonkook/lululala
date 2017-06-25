@@ -6,6 +6,7 @@ public class ConstantParam {
 
 	public static final String PLAFORM_BITHUM = "BITHUM";
 	public static final String PLAFORM_BIDUOBAO = "BIDUOBAO";
+	public static final String PLAFORM_JUBI = "JUBI";
 	public static final String PLAFORM_OKCOIN = "OKCOIN";
 	public static final String PLAFORM_COINCHECK = "COINCHECK";
 

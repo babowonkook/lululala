@@ -32,12 +32,18 @@ public class SocketSendMessage implements Runnable {
 	
 	private String tufaQingkuang;
 	
+	private String plaform1;
+	
+	private String plaform2;
+	
 	public SocketSendMessage(WebSocketSession user,
 							Map<WebSocketSession, String> userType,
 							PingTaiTradeService service,
 							String rate,
 							String totalPrice,
-							String tufaQingkuang) {
+							String tufaQingkuang,
+							String plaform1,
+							String plaform2) {
 		// TODO Auto-generated constructor stub
 		this.user = user;
 		this.userType = userType;
@@ -45,6 +51,8 @@ public class SocketSendMessage implements Runnable {
 		this.rate = rate;
 		this.totalPrice = totalPrice;
 		this.tufaQingkuang = tufaQingkuang;
+		this.plaform1 = plaform1;
+		this.plaform2 = plaform2;
 	}
 	
 	@Override
@@ -69,7 +77,7 @@ public class SocketSendMessage implements Runnable {
 				if(user == null || !user.isOpen()) {
 					break;
 				}
-				Map<String, Object> rs = service.compare(ConstantParam.PLAFORM_BIDUOBAO, ConstantParam.PLAFORM_BITHUM, rate, totalPrice, tufaQingkuang);
+				Map<String, Object> rs = service.compare(plaform1, plaform2, rate, totalPrice, tufaQingkuang);
 				
 				Date date = new Date();
 				DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG);

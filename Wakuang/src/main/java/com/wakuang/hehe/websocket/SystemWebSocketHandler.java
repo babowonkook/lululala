@@ -69,7 +69,7 @@ public class SystemWebSocketHandler implements WebSocketHandler {
         if("1".equals(type) && userType.get(arg0) == null || ConstantParam.N.equals(userType.get(arg0)) ) {
         	ExecutorService = Executors.newFixedThreadPool(1);
         	userType.put(arg0, ConstantParam.Y);
-        	ExecutorService.execute(new SocketSendMessage(arg0, userType, service, rate, totalPrice, tufaQingkuang));
+        	ExecutorService.execute(new SocketSendMessage(arg0, userType, service, rate, totalPrice, tufaQingkuang, ConstantParam.PLAFORM_BIDUOBAO, ConstantParam.PLAFORM_BITHUM));
         	ExecutorService.shutdown();
         }else if("2".equals(type)) {
         	userType.put(arg0, ConstantParam.N);
