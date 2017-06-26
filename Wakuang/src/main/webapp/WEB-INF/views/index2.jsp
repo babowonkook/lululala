@@ -114,8 +114,8 @@
             	var rate = $("#rate").val();
             	var totalPrice = $("#totalPrice").val();
             	
-            	var buyPlatform = $("platform1").val();
-            	var sellPlatform = $("platform2").val();
+            	var buyPlatform = $("#platform1").val();
+            	var sellPlatform = $("#platform2").val();
             	var obj = {
             		"totalPrice" : totalPrice*10000,
             		"rate" : rate,
@@ -291,7 +291,8 @@
         	<br>
 			<select id="platform1">
 				<option value='BIDUOBAO'>币多宝</option>
-				<option value='JUBI'>JUBI</option>
+				<option value='JUBI'>聚币</option>
+				<option value='COINCHECK'>COINCHECK</option>
 			</select>
         	
 			<select id="platform2">
