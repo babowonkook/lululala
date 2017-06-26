@@ -293,6 +293,7 @@
 				<option value='BIDUOBAO'>币多宝</option>
 				<option value='JUBI'>聚币</option>
 				<option value='COINCHECK'>COINCHECK</option>
+				<option value='BETR'>BETR</option>
 			</select>
         	
 			<select id="platform2">

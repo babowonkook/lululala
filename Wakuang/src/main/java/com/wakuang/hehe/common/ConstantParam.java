@@ -9,6 +9,7 @@ public class ConstantParam {
 	public static final String PLAFORM_JUBI = "JUBI";
 	public static final String PLAFORM_OKCOIN = "OKCOIN";
 	public static final String PLAFORM_COINCHECK = "COINCHECK";
+	public static final String PLAFORM_BETR = "BETR";
 
 	public static final String COINTYPE_BTC = "BTC";
 	public static final String COINTYPE_ETH = "ETH";

@@ -28,6 +28,10 @@ public class PingTaiTradeService {
     @Autowired
     @Qualifier("coincheckService")
     private SearchCoincheckPrice coincheckService;
+    
+    @Autowired
+    @Qualifier("bterService")
+    private SearchBterPrice searchBterPrice;
 
     public BigDecimal buyCoin(String plaform,
             String coinType,
@@ -118,6 +122,7 @@ public class PingTaiTradeService {
 		rs.put(ConstantParam.PLAFORM_BIDUOBAO, biduobaoService);
 		rs.put(ConstantParam.PLAFORM_JUBI, jubiService);
         rs.put(ConstantParam.PLAFORM_COINCHECK, coincheckService);
+        rs.put(ConstantParam.PLAFORM_BETR, searchBterPrice);
 		return rs;
 	}
 	
