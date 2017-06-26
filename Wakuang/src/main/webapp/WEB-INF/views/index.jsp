@@ -5,7 +5,6 @@
 <html>  
 <head>  
 <!-- <script type="text/javascript" src="/resource/js/jquery-3.2.1.js"/> -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
 <title>WebSocket/SockJS Echo Sample (Adapted from Tomcat's echo sample)</title>  
     <style type="text/css">  
@@ -39,8 +38,9 @@
             margin: 0;  
         }  
     </style>  
-  
-    <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>  
+    <script src="/js/jquery.min.js"></script>  
+    <script src="/js/sockjs-0.3.min.js"></script>  
+    
   
     <script type="text/javascript">  
         var ws = null;  

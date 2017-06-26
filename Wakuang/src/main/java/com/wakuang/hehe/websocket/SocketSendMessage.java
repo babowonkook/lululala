@@ -59,7 +59,7 @@ public class SocketSendMessage implements Runnable {
 	public void run() {
 		// TODO Auto-generated method stub
 		if(StringUtils.isEmpty(rate)) {
-			rate = "165";			
+			rate = "168.5";			
 		}
 		
 		if(StringUtils.isEmpty(totalPrice)) {

@@ -21,6 +21,10 @@ public class PingTaiTradeService {
 	@Qualifier("biduobaoService")
 	private SearchPingtaiPrice biduobaoService;
 	
+	@Autowired 
+    @Qualifier("jubiService")
+    private SearchPingtaiPrice jubiService;
+	
     public BigDecimal buyCoin(String plaform,
             String coinType,
             BigDecimal totalPrice,
@@ -108,6 +112,7 @@ public class PingTaiTradeService {
 		Map<String, SearchPingtaiPrice> rs = new HashMap<>();
 		rs.put(ConstantParam.PLAFORM_BITHUM, bithumbService);
 		rs.put(ConstantParam.PLAFORM_BIDUOBAO, biduobaoService);
+		rs.put(ConstantParam.PLAFORM_JUBI, jubiService);
 		return rs;
 	}
 	

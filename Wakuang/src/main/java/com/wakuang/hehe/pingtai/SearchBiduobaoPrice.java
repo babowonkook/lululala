@@ -18,7 +18,7 @@ import com.wakuang.hehe.utils.WakuangStringUtils;
 public class SearchBiduobaoPrice implements SearchPingtaiPrice {
     public Map<String, Map<String, BigDecimal>> getPrice() throws Exception {
         String url = "https://www.biduobao.com/coin/allcoin?t=123123";
-        String html = SslTest.getRequest(url, 3000);
+        String html = SslTest.getRequest(url, 10000);
         JsonNode rootNode = WakuangStringUtils.stringToJsonNode(html);
         Iterator<Entry<String, JsonNode>> jsonNodes = rootNode.fields();
         Map coins = new HashMap<String, Map<String, BigDecimal>>();

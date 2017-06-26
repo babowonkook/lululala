@@ -5,7 +5,7 @@
 <html>  
 <head>  
 <!-- <script type="text/javascript" src="/resource/js/jquery-3.2.1.js"/> -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
 <title>WebSocket/SockJS Echo Sample (Adapted from Tomcat's echo sample)</title>  
     <style type="text/css">  
@@ -39,8 +39,8 @@
             margin: 0;  
         }  
     </style>  
-  
-    <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>  
+  	<script src="/js/jquery.min.js"></script>
+    <script src="/js/sockjs-0.3.min.js"></script>  
   
     <script type="text/javascript">  
         var ws = null;  
@@ -51,7 +51,7 @@
         
         var thisRate = "168.3";
         
-        var tk = "yes";
+        var tk = "no";
   
         function setConnected(connected) {  
             document.getElementById('connect').disabled = connected;  
@@ -114,15 +114,15 @@
             	var rate = $("#rate").val();
             	var totalPrice = $("#totalPrice").val();
             	
-            	var plaform1 = $("platform1").val();
-            	var plaform2 = $("platform2").val();
+            	var buyPlatform = $("platform1").val();
+            	var sellPlatform = $("platform2").val();
             	var obj = {
             		"totalPrice" : totalPrice*10000,
             		"rate" : rate,
             		"type" : msg,
             		"tufaQingkuang" : tk,
-            		"plaform1" : plaform1,
-            		"plaform2" : plaform2
+            		"buyPlatform" : buyPlatform,
+            		"sellPlatform" : sellPlatform
             	}
             	if(rate != "") {
             		thisRate = rate;
@@ -356,6 +356,7 @@
 					<select id="buyPlatform">
 						<option value='BIDUOBAO'>币多宝</option>
 						<option value='BITHUM'>BITHUM</option>
+						<option value='JUBI'>JUBI</option>
 					</select>
 				</td>
 				
@@ -398,6 +399,7 @@
 					<select id="sellPlatform">
 						<option value='BIDUOBAO'>币多宝</option>
 						<option value='BITHUM'>BITHUM</option>
+						<option value='JUBI'>JUBI</option>
 					</select>
 				</td>
 				

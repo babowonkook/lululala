@@ -66,10 +66,12 @@ public class SystemWebSocketHandler implements WebSocketHandler {
         String rate = jsonNode.get("rate").asText();
         String totalPrice = jsonNode.get("totalPrice").asText();
         String tufaQingkuang = jsonNode.get("tufaQingkuang").asText();
+        String buyPlatform = jsonNode.get("buyPlatform") != null ? jsonNode.get("buyPlatform").asText() : ConstantParam.PLAFORM_BIDUOBAO;
+        String sellPlatform = jsonNode.get("sellPlatform") != null ? jsonNode.get("sellPlatform").asText() : ConstantParam.PLAFORM_BITHUM;
         if("1".equals(type) && userType.get(arg0) == null || ConstantParam.N.equals(userType.get(arg0)) ) {
         	ExecutorService = Executors.newFixedThreadPool(1);
         	userType.put(arg0, ConstantParam.Y);
-        	ExecutorService.execute(new SocketSendMessage(arg0, userType, service, rate, totalPrice, tufaQingkuang, ConstantParam.PLAFORM_BIDUOBAO, ConstantParam.PLAFORM_BITHUM));
+        	ExecutorService.execute(new SocketSendMessage(arg0, userType, service, rate, totalPrice, tufaQingkuang, buyPlatform, sellPlatform));
         	ExecutorService.shutdown();
         }else if("2".equals(type)) {
         	userType.put(arg0, ConstantParam.N);
