@@ -102,7 +102,7 @@
         }  
   
         function echo(msg) {  
-        	if(msg == 1) {
+        	if(msg == 3) {
         		onload = true;
         		document.getElementById('echo1').disabled = true;
         	}else if(msg == 2) {
@@ -111,21 +111,26 @@
         	}
         	
             if (ws != null) {
-            	var rate = $("#rate").val();
+            	var rateCNY = $("#rate_CNY").val();
+            	var rateJPY = $("#rate_JPY").val();
+            	var rateUSD = $("#rate_USD").val();
             	var totalPrice = $("#totalPrice").val();
             	
             	var buyPlatform = $("#platform1").val();
             	var sellPlatform = $("#platform2").val();
             	var obj = {
             		"totalPrice" : totalPrice*10000,
-            		"rate" : rate,
+            		"rate" : rateCNY,
+            		"rateCNY" : rateCNY,
+            		"rateJPY" : rateJPY,
+            		"rateUSD" : rateUSD,
             		"type" : msg,
             		"tufaQingkuang" : tk,
             		"buyPlatform" : buyPlatform,
             		"sellPlatform" : sellPlatform
             	}
-            	if(rate != "") {
-            		thisRate = rate;
+            	if(rateCNY != "") {
+            		thisRate = rateCNY;
             	}
                 ws.send(JSON.stringify(obj));  
             } else {  
@@ -174,36 +179,60 @@
         	
         	var html = "";
         	
-        	var result = JSON.parse(jsonInfo.COMPAIRE_DATA);
-        	for(var i in result){
-        	    if("COMPAIRE_INFO" != i){
-	        		var fromTo = "";
-	        		if(result[i].compare >= 0){
-	        			fromTo = "<font size='3' color='red'>-></font>"
-	        		}else{
-	        			fromTo = "<font size='3' color='blue'><-</font>"
-	        		}
-	        		
-	        		var trColor = "";
-	        		if(result[i].shouyi_rate <= 0){
-	        			trColor = "bgcolor='gray'";
-	        		}else if(result[i].shouyi_rate > 0.03){
-	        			trColor = "bgcolor='green'";
-	        		}
-	        	    html = html + "<tr " + trColor + ">";
-	        	    html = html + "<td>" + fromTo + "</td>";
-	        	    html = html + "<td>" + i + "</td>";
-	        	    html = html + "<td>" + formatMoney(result[i].map.PRICE, true) + "</td>";
-	        	    html = html + "<td>" + formatMoney(parseFloat((result[i].map.PRICE) * parseFloat(thisRate))+"", true) + "</td>";
-	        	    html = html + "<td>" + formatMoney(result[i].map2.PRICE, true) + "</td>";
-	        	    html = html + "<td>" + formatMoney(result[i].compare, true) + "</td>";
-	        	    html = html + "<td>" + ((result[i].shouyi_rate*100).toFixed(4)) + "%</td>";
-	        	    html = html + "<td>" + formatMoney(result[i].shouyi_e.toFixed(0)/10000, true) + "</td>";
-	        	    
-	      		  	html = html + "</tr>";
+        	var jsonComaireDatas = JSON.parse(jsonInfo.COMPAIRE_DATA);
+        	for(var i in jsonComaireDatas){
+        	    html = html + "平台" + jsonComaireDatas[i].COMPAIRE_INFO.PLATFORM1 + "  " + jsonComaireDatas[i].COMPAIRE_INFO.PLATFORM2 +"<br>";
+        	    html = html + "汇率：" + jsonComaireDatas[i].COMPAIRE_INFO.EXCHANGERATE ;
+        	    html = html + "<table id='coinInfo' border='1'>             ";
+	    	    html = html + "	<thead>                                     ";
+	    	    html = html + "		<tr>                                    ";
+	    	    html = html + "		<th width='50'>方向</th>                ";
+	    	    html = html + "		<th width='60'>币种</th>                  ";
+	    	    html = html + "		<th id='plaform1th'>"+jsonComaireDatas[i].COMPAIRE_INFO.PLATFORM1+"价格</th>      ";
+	    	    html = html + "		<th id='plaform1krwth'>"+jsonComaireDatas[i].COMPAIRE_INFO.PLATFORM1+"韩元价格</th>";
+	    	    html = html + "		<th id='plaform2th'>"+jsonComaireDatas[i].COMPAIRE_INFO.PLATFORM2+"价格</th>      ";
+	    	    html = html + "		<th>差价</th>                           ";
+	    	    html = html + "		<th width='50'>收益率</th>              ";
+	    	    html = html + "		<th width='60'>收益额</th>               ";
+	    	    html = html + "		</tr>                                   ";
+	    	    html = html + "	</thead>                                    ";
+	    	    html = html + "	<tbody>                                     ";
+
+        	    for(var j in jsonComaireDatas[i]){
+	        	    if("COMPAIRE_INFO" != j){
+	        	        var result = jsonComaireDatas[i][j]
+		        		var fromTo = "";
+		        		if(result.compare >= 0){
+		        			fromTo = "<font size='3' color='red'>-></font>"
+		        		}else{
+		        			fromTo = "<font size='3' color='blue'><-</font>"
+		        		}
+		        		
+		        		var trColor = "";
+		        		if(result.shouyi_rate <= 0){
+		        			trColor = "bgcolor='gray'";
+		        		}else if(result.shouyi_rate > 0.03){
+		        			trColor = "bgcolor='green'";
+		        		}
+		        	    html = html + "<tr " + trColor + ">";
+		        	    html = html + "<td>" + fromTo + "</td>";
+		        	    html = html + "<td>" + j + "</td>";
+		        	    html = html + "<td>" + formatMoney(result.map.PRICE, true) + "</td>";
+		        	    html = html + "<td>" + formatMoney(parseFloat((result.map.PRICE) * parseFloat(thisRate))+"", true) + "</td>";
+		        	    html = html + "<td>" + formatMoney(result.map2.PRICE, true) + "</td>";
+		        	    html = html + "<td>" + formatMoney(result.compare, true) + "</td>";
+		        	    html = html + "<td>" + ((result.shouyi_rate*100).toFixed(4)) + "%</td>";
+		        	    html = html + "<td>" + formatMoney(result.shouyi_e.toFixed(0)/10000, true) + "</td>";
+		        	    
+		      		  	html = html + "</tr>";
+	        	        
+	        	    }
+        	        
         	    }
+	    	    html = html + "	</tbody>                                    ";
+	    	    html = html + "</table></br>                                     ";
         	}
-        	$("#coinInfo tbody").html(html);
+        	$("#coinInfos").html(html);
         }
         
         function rmoney(s) {  
@@ -292,7 +321,10 @@
             <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>  
         </div>  
         <div>
-        	汇率: <input type="text" value="168.3" id="rate" /> <br>
+        	人民币汇率: <input type="text" value="168.3" id="rate_CNY" /> <br>
+        	日元汇率: <input type="text" value="10.31437174" id="rate_JPY" /> <br>
+        	美元汇率: <input type="text" value="1136.00" id="rate_USD" /> <br>
+        	
         	投入价格： <input type="text" value="1000" id="totalPrice" />
         	<br>
 			<select id="platform1">
@@ -311,7 +343,7 @@
         </div>  
         <div>  
             <button style="display: none;" id="echo" onclick="echo();" disabled="disabled">Echo message</button>
-            <button id="echo1" onclick="echo('1');" disabled="disabled">START</button>
+            <button id="echo1" onclick="echo('3');" disabled="disabled">START</button>
             <button id="echo2" onclick="echo('2');" disabled="disabled">END</button>
         </div>  
         
@@ -320,7 +352,7 @@
 
       
     <br>
-    <div style="float: left; ">
+    <div style="float: left; " id="coinInfos">
 	    <table id="coinInfo" border="1">
 	    	<thead>
 	    		<tr>

@@ -1,9 +1,6 @@
 package com.wakuang.hehe.hanguo;
 
 
-import java.math.BigDecimal;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,12 +40,5 @@ public class HanguoController {
     @RequestMapping("/getTransaction")
     public String getTransaction(@RequestParam(defaultValue = "", value = ConstantParam.TYPE, required = false) String type) throws Exception {
         return hanguoService.getTransaction(type);
-    }
-    
-    @ResponseBody
-    @RequestMapping("/searchBithumbPrice")
-    public Map<String, Map<String, BigDecimal>> searchBithumbPrice() throws Exception {
-    	pingTaiService = factory.getSearchPingtaiService("bithumbService");
-    	return pingTaiService.getPrice();
     }
 }

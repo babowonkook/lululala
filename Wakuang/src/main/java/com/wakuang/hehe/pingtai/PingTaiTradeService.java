@@ -1,7 +1,9 @@
 package com.wakuang.hehe.pingtai;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,53 +70,104 @@ public class PingTaiTradeService {
 							  String rate,
 							  String amt,
 							  String tk) throws Exception {
-		String coinTypes[] = {ConstantParam.COINTYPE_BTC, ConstantParam.COINTYPE_ETH, ConstantParam.COINTYPE_LTC, ConstantParam.COINTYPE_DASH, ConstantParam.COINTYPE_ETC, ConstantParam.COINTYPE_XRP};
+
 		BigDecimal rateChange = new BigDecimal(rate);
 		BigDecimal totalPrice = new BigDecimal(amt);
 		Map<String, SearchPingtaiPrice> serviceMap = initService();
 		SearchPingtaiPrice searchPingtaiPrice = serviceMap.get(pingTaiTp);
 		SearchPingtaiPrice searchPingtaiPrice2 = serviceMap.get(pingTaiTp2);
-		Map<String, Map<String, BigDecimal>> rs1 = searchPingtaiPrice.getPrice();
-		Map<String, Map<String, BigDecimal>> rs2 = searchPingtaiPrice2.getPrice();
+        Map<String, Map<String, BigDecimal>> result1 = searchPingtaiPrice.getPrice();
+        Map<String, Map<String, BigDecimal>> result2 = searchPingtaiPrice2.getPrice();
 			
-		Map<String, Object> result = new HashMap<>();
-		Map<String, BigDecimal> coinMap;
-		Map<String, BigDecimal> coinMap2;
-		BigDecimal compareValue;
-		Map<String, Object> temp;
-		for(String coin : coinTypes) {
-			if(rs1.get(coin) != null && rs2.get(coin) != null) {
-				coinMap = rs1.get(coin);
-				coinMap2 = rs2.get(coin);
-				compareValue = coinMap2.get(ConstantParam.COIN_INFO_PRICE).subtract(coinMap.get(ConstantParam.COIN_INFO_PRICE).multiply(rateChange));
-				temp = new HashMap<>();
-				// 平台1 > 平台2
-				// 平台1 卖， 平台2买
-				
-				// 收益率， 收益额
-				if(compareValue.compareTo(BigDecimal.ZERO) == 1){
-					BigDecimal coinCnt = buyCoin(pingTaiTp, coin, totalPrice, coinMap.get(ConstantParam.COIN_INFO_PRICE).multiply(rateChange), tk);
-					BigDecimal sellAmt = sellCoin(pingTaiTp2, coin, coinCnt, coinMap2.get(ConstantParam.COIN_INFO_PRICE), tk);
-					BigDecimal shouYi_e = sellAmt.subtract(totalPrice);
-					BigDecimal shouYiRate = shouYi_e.divide(totalPrice,4,BigDecimal.ROUND_HALF_UP);
-					temp.put(ConstantParam.SHOUYI_E, shouYi_e.setScale(0, BigDecimal.ROUND_HALF_UP));
-					temp.put(ConstantParam.SHOUYI_RATE, shouYiRate.setScale(4, BigDecimal.ROUND_HALF_UP));
-				}else{
-					BigDecimal coinCnt = buyCoin(pingTaiTp2, coin, totalPrice, coinMap2.get(ConstantParam.COIN_INFO_PRICE), tk);
-					BigDecimal sellAmt = sellCoin(pingTaiTp, coin, coinCnt, coinMap.get(ConstantParam.COIN_INFO_PRICE) , tk);
-					BigDecimal shouYi_e = sellAmt.multiply(rateChange).subtract(totalPrice);
-					BigDecimal shouYiRate = shouYi_e.divide(totalPrice,4,BigDecimal.ROUND_HALF_UP);
-					temp.put(ConstantParam.SHOUYI_E, shouYi_e.setScale(0, BigDecimal.ROUND_HALF_UP));
-					temp.put(ConstantParam.SHOUYI_RATE, shouYiRate.setScale(4, BigDecimal.ROUND_HALF_UP));
-				}
-				temp.put(ConstantParam.COMPARE, compareValue);
-				temp.put(ConstantParam.MAP, coinMap);
-				temp.put(ConstantParam.MAP2, coinMap2);
-				result.put(coin, temp);
-			}
-		}
-		return result;
+        return compare(result1, result2, pingTaiTp, pingTaiTp2, totalPrice, rateChange, tk);
 	}
+
+    public List<Map<String, Object>> compareAll(String rateCNY,
+                                                String rateJPY,
+                                                String rateUSD,
+                                                String amt,
+                                                String tk) throws Exception {
+
+        BigDecimal CNY = new BigDecimal(rateCNY);
+        BigDecimal JPY = new BigDecimal(rateJPY);
+        BigDecimal USD = new BigDecimal(rateUSD);
+        BigDecimal totalPrice = new BigDecimal(amt);
+        Map<String, SearchPingtaiPrice> serviceMap = initService();
+        SearchPingtaiPrice searchBithumbPrice = serviceMap.get(ConstantParam.PLAFORM_BITHUM);
+        SearchPingtaiPrice searchBiduobaoPrice = serviceMap.get(ConstantParam.PLAFORM_BIDUOBAO);
+        SearchPingtaiPrice searchJubiPrice = serviceMap.get(ConstantParam.PLAFORM_JUBI);
+        SearchPingtaiPrice searchOkcoinPrice = serviceMap.get(ConstantParam.PLAFORM_OKCOIN);
+        SearchPingtaiPrice searchBetrPrice = serviceMap.get(ConstantParam.PLAFORM_BETR);
+        SearchPingtaiPrice searchCoincheckPrice = serviceMap.get(ConstantParam.PLAFORM_COINCHECK);
+        Map<String, Map<String, BigDecimal>> bitumbPrice = searchBithumbPrice.getPrice();
+        Map<String, Map<String, BigDecimal>> biduobaoPrice = searchBiduobaoPrice.getPrice();
+        Map<String, Map<String, BigDecimal>> jubiPrice = searchJubiPrice.getPrice();
+        Map<String, Map<String, BigDecimal>> coincheckPrice = searchCoincheckPrice.getPrice();
+        Map<String, Map<String, BigDecimal>> betrPrice = searchBetrPrice.getPrice();
+        List<Map<String, Object>> comparList = new ArrayList<>();
+        Map<String, Object> compare1 = compare(biduobaoPrice, bitumbPrice, ConstantParam.PLAFORM_BIDUOBAO, ConstantParam.PLAFORM_BITHUM, totalPrice, CNY, tk);
+        Map<String, Object> compare2 = compare(jubiPrice, bitumbPrice, ConstantParam.PLAFORM_JUBI, ConstantParam.PLAFORM_BITHUM, totalPrice, CNY, tk);
+        Map<String, Object> compare3 = compare(betrPrice, bitumbPrice, ConstantParam.PLAFORM_BETR, ConstantParam.PLAFORM_BITHUM, totalPrice, CNY, tk);
+        Map<String, Object> compare4 = compare(coincheckPrice, bitumbPrice, ConstantParam.PLAFORM_COINCHECK, ConstantParam.PLAFORM_BITHUM, totalPrice, JPY, tk);
+        comparList.add(compare1);
+        comparList.add(compare2);
+        comparList.add(compare3);
+        comparList.add(compare4);
+        return comparList;
+    }
+
+    public Map<String, Object> compare(Map<String, Map<String, BigDecimal>> result1,
+                                       Map<String, Map<String, BigDecimal>> result2,
+                                       String pingTaiTp,
+                                       String pingTaiTp2,
+                                       BigDecimal totalPrice,
+                                       BigDecimal rateChange,
+                                       String tk) {
+        String coinTypes[] = { ConstantParam.COINTYPE_BTC, ConstantParam.COINTYPE_ETH, ConstantParam.COINTYPE_LTC, ConstantParam.COINTYPE_DASH, ConstantParam.COINTYPE_ETC, ConstantParam.COINTYPE_XRP };
+        Map<String, Object> result = new HashMap<>();
+        Map<String, BigDecimal> coinMap;
+        Map<String, BigDecimal> coinMap2;
+        BigDecimal compareValue;
+        Map<String, Object> temp;
+
+        Map<String, Object> compaireInfo = new HashMap<>();
+        compaireInfo.put(ConstantParam.RESPONSE_PLATFORM1, pingTaiTp);
+        compaireInfo.put(ConstantParam.RESPONSE_PLATFORM2, pingTaiTp2);
+        compaireInfo.put(ConstantParam.RESPONSE_EXCHANGERATE, rateChange);
+        result.put(ConstantParam.RESPONSE_COMPAIRE_INFO, compaireInfo);
+        for (String coin : coinTypes) {
+            if (result1.get(coin) != null && result2.get(coin) != null) {
+                coinMap = result1.get(coin);
+                coinMap2 = result2.get(coin);
+                compareValue = coinMap2.get(ConstantParam.COIN_INFO_PRICE).subtract(coinMap.get(ConstantParam.COIN_INFO_PRICE).multiply(rateChange));
+                temp = new HashMap<>();
+                // 平台1 > 平台2
+                // 平台1 卖， 平台2买
+
+                // 收益率， 收益额
+                if (compareValue.compareTo(BigDecimal.ZERO) == 1) {
+                    BigDecimal coinCnt = buyCoin(pingTaiTp, coin, totalPrice, coinMap.get(ConstantParam.COIN_INFO_PRICE).multiply(rateChange), tk);
+                    BigDecimal sellAmt = sellCoin(pingTaiTp2, coin, coinCnt, coinMap2.get(ConstantParam.COIN_INFO_PRICE), tk);
+                    BigDecimal shouYi_e = sellAmt.subtract(totalPrice);
+                    BigDecimal shouYiRate = shouYi_e.divide(totalPrice, 4, BigDecimal.ROUND_HALF_UP);
+                    temp.put(ConstantParam.SHOUYI_E, shouYi_e.setScale(0, BigDecimal.ROUND_HALF_UP));
+                    temp.put(ConstantParam.SHOUYI_RATE, shouYiRate.setScale(4, BigDecimal.ROUND_HALF_UP));
+                } else {
+                    BigDecimal coinCnt = buyCoin(pingTaiTp2, coin, totalPrice, coinMap2.get(ConstantParam.COIN_INFO_PRICE), tk);
+                    BigDecimal sellAmt = sellCoin(pingTaiTp, coin, coinCnt, coinMap.get(ConstantParam.COIN_INFO_PRICE), tk);
+                    BigDecimal shouYi_e = sellAmt.multiply(rateChange).subtract(totalPrice);
+                    BigDecimal shouYiRate = shouYi_e.divide(totalPrice, 4, BigDecimal.ROUND_HALF_UP);
+                    temp.put(ConstantParam.SHOUYI_E, shouYi_e.setScale(0, BigDecimal.ROUND_HALF_UP));
+                    temp.put(ConstantParam.SHOUYI_RATE, shouYiRate.setScale(4, BigDecimal.ROUND_HALF_UP));
+                }
+                temp.put(ConstantParam.COMPARE, compareValue);
+                temp.put(ConstantParam.MAP, coinMap);
+                temp.put(ConstantParam.MAP2, coinMap2);
+                result.put(coin, temp);
+            }
+        }
+        return result;
+    }
 
 	private Map<String, SearchPingtaiPrice> initService() {
 		Map<String, SearchPingtaiPrice> rs = new HashMap<>();

@@ -4,12 +4,13 @@ public class ConstantParam {
 
 	public static final String TYPE = "type";
 
-	public static final String PLAFORM_BITHUM = "BITHUM";
-	public static final String PLAFORM_BIDUOBAO = "BIDUOBAO";
-	public static final String PLAFORM_JUBI = "JUBI";
-	public static final String PLAFORM_OKCOIN = "OKCOIN";
-	public static final String PLAFORM_COINCHECK = "COINCHECK";
-	public static final String PLAFORM_BETR = "BETR";
+    public static final String PLAFORM                = "PLAFORM";
+    public static final String PLAFORM_BITHUM         = "BITHUM";
+    public static final String PLAFORM_BIDUOBAO       = "BIDUOBAO";
+    public static final String PLAFORM_JUBI           = "JUBI";
+    public static final String PLAFORM_OKCOIN         = "OKCOIN";
+    public static final String PLAFORM_COINCHECK      = "COINCHECK";
+    public static final String PLAFORM_BETR           = "BETR";
 
 	public static final String COINTYPE_BTC = "BTC";
 	public static final String COINTYPE_ETH = "ETH";
@@ -35,13 +36,14 @@ public class ConstantParam {
 	public static final String CHARGE_REMITTANCE = "REMITTANCE";
 
 	// 금액유형
-	public static final String COIN_INFO_PRICE = "PRICE";
-	public static final String COIN_INFO_BUY = "BUY";
-	public static final String COIN_INFO_SELL = "SELL";
-	public static final String COIN_INFO_MAX = "MAX";
-	public static final String COIN_INFO_MIN = "MIN";
-	public static final String COIN_INFO_SUM = "SUM";
-	public static final String COIN_INFO_VOLUME = "VOLUME";
+    public static final String COIN_INFO              = "COIN_INFO";
+    public static final String COIN_INFO_PRICE        = "PRICE";
+    public static final String COIN_INFO_BUY          = "BUY";
+    public static final String COIN_INFO_SELL         = "SELL";
+    public static final String COIN_INFO_MAX          = "MAX";
+    public static final String COIN_INFO_MIN          = "MIN";
+    public static final String COIN_INFO_SUM          = "SUM";
+    public static final String COIN_INFO_VOLUME       = "VOLUME";
 
 	public static final String COMPARE = "compare";
 	public static final String MAP = "map";
@@ -62,6 +64,7 @@ public class ConstantParam {
     public static final String RESPONSE_STATUS        = "STATUS";
     public static final String RESPONSE_SYSTEM_TIME   = "SYSTEM_TIME";
     public static final String RESPONSE_COMPAIRE_DATA = "COMPAIRE_DATA";
+    public static final String RESPONSE_COMPAIRE_INFO = "COMPAIRE_INFO";
     public static final String RESPONSE_EXCHANGERATE  = "EXCHANGERATE";
     public static final String RESPONSE_PLATFORM1     = "PLATFORM1";
     public static final String RESPONSE_PLATFORM2     = "PLATFORM2";

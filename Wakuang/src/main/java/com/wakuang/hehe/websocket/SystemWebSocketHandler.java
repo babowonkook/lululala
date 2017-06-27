@@ -62,15 +62,22 @@ public class SystemWebSocketHandler implements WebSocketHandler {
         }
         String type = jsonNode.get("type").asText();
         String rate = jsonNode.get("rate").asText();
+        String rateCNY = jsonNode.get("rateCNY").asText();
+        String rateJPY = jsonNode.get("rateJPY").asText();
+        String rateUSD = jsonNode.get("rateUSD").asText();
         String totalPrice = jsonNode.get("totalPrice").asText();
         String tufaQingkuang = jsonNode.get("tufaQingkuang").asText();
         String buyPlatform = jsonNode.get("buyPlatform") != null ? jsonNode.get("buyPlatform").asText() : ConstantParam.PLAFORM_BIDUOBAO;
         String sellPlatform = jsonNode.get("sellPlatform") != null ? jsonNode.get("sellPlatform").asText() : ConstantParam.PLAFORM_BITHUM;
+        excutorService = Executors.newFixedThreadPool(50);
         if("1".equals(type) && userType.get(webSocketSession) == null || ConstantParam.N.equals(userType.get(webSocketSession)) ) {
-        	excutorService = Executors.newFixedThreadPool(1);
         	userType.put(webSocketSession, ConstantParam.Y);
         	excutorService.execute(new SocketSendMessage(webSocketSession, userType, service, rate, totalPrice, tufaQingkuang, buyPlatform, sellPlatform));
         	excutorService.shutdown();
+        } else if ("3".equals(type) && userType.get(webSocketSession) == null || ConstantParam.N.equals(userType.get(webSocketSession))) {
+            userType.put(webSocketSession, ConstantParam.Y);
+            excutorService.execute(new SocketSendAllMessage(webSocketSession, userType, service, rateCNY, rateJPY, rateUSD, totalPrice, tufaQingkuang, buyPlatform, sellPlatform));
+            excutorService.shutdown();
         }else if("2".equals(type)) {
         	userType.put(webSocketSession, ConstantParam.N);
         }

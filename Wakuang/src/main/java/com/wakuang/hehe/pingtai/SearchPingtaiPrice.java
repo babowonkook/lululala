@@ -32,5 +32,5 @@ public abstract interface SearchPingtaiPrice {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, Map<String, BigDecimal>> getPrice() throws Exception;
+    public Map<String, Map<String, BigDecimal>> getPrice() throws Exception;
 }

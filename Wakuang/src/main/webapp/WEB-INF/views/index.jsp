@@ -165,32 +165,33 @@
         	var html = "";
         	
         	var result = JSON.parse(jsonInfo.COMPAIRE_DATA);
-        	for(var i in result)
-        	{
-        		var fromTo = "";
-        		if(result[i].compare >= 0){
-        			fromTo = "<font size='3' color='red'>-></font>"
-        		}else{
-        			fromTo = "<font size='3' color='blue'><-</font>"
-        		}
-        		
-        		var trColor = "";
-        		if(result[i].shouyi_rate <= 0){
-        			trColor = "bgcolor='gray'";
-        		}else if(result[i].shouyi_rate > 0.03){
-        			trColor = "bgcolor='green'";
-        		}
-        	    html = html + "<tr " + trColor + ">";
-        	    html = html + "<td>" + fromTo + "</td>";
-        	    html = html + "<td>" + i + "</td>";
-        	    html = html + "<td>" + formatMoney(result[i].map.PRICE, true) + "</td>";
-        	    html = html + "<td>" + formatMoney(parseFloat((result[i].map.PRICE) * parseFloat(thisRate))+"", true) + "</td>";
-        	    html = html + "<td>" + formatMoney(result[i].map2.PRICE, true) + "</td>";
-        	    html = html + "<td>" + formatMoney(result[i].compare, true) + "</td>";
-        	    html = html + "<td>" + ((result[i].shouyi_rate*100).toFixed(4)) + "%</td>";
-        	    html = html + "<td>" + formatMoney(result[i].shouyi_e.toFixed(0)/10000, true) + "</td>";
-        	    
-      		  	html = html + "</tr>";
+        	for(var i in result){
+        	    if("COMPAIRE_INFO" != i){
+	        		var fromTo = "";
+	        		if(result[i].compare >= 0){
+	        			fromTo = "<font size='3' color='red'>-></font>"
+	        		}else{
+	        			fromTo = "<font size='3' color='blue'><-</font>"
+	        		}
+	        		
+	        		var trColor = "";
+	        		if(result[i].shouyi_rate <= 0){
+	        			trColor = "bgcolor='gray'";
+	        		}else if(result[i].shouyi_rate > 0.03){
+	        			trColor = "bgcolor='green'";
+	        		}
+	        	    html = html + "<tr " + trColor + ">";
+	        	    html = html + "<td>" + fromTo + "</td>";
+	        	    html = html + "<td>" + i + "</td>";
+	        	    html = html + "<td>" + formatMoney(result[i].map.PRICE, true) + "</td>";
+	        	    html = html + "<td>" + formatMoney(parseFloat((result[i].map.PRICE) * parseFloat(thisRate))+"", true) + "</td>";
+	        	    html = html + "<td>" + formatMoney(result[i].map2.PRICE, true) + "</td>";
+	        	    html = html + "<td>" + formatMoney(result[i].compare, true) + "</td>";
+	        	    html = html + "<td>" + ((result[i].shouyi_rate*100).toFixed(4)) + "%</td>";
+	        	    html = html + "<td>" + formatMoney(result[i].shouyi_e.toFixed(0)/10000, true) + "</td>";
+	        	    
+	      		  	html = html + "</tr>";
+        	    }
         	}
         	$("#coinInfo tbody").html(html);
         }
