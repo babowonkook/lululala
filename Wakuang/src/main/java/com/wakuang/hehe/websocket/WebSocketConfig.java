@@ -22,7 +22,6 @@ public class WebSocketConfig extends WebMvcConfigurerAdapter implements WebSocke
 	
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry arg0) {
-		// TODO Auto-generated method stub
 		arg0.addHandler(systemWebSocketHandler(),"/webSocketServer");  
 		arg0.addHandler(systemWebSocketHandler(),"/webSocketServer/sockjs").setAllowedOrigins("*").withSockJS(); 
 	}

@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -35,6 +37,8 @@ public class SocketSendMessage implements Runnable {
 	
 	private String plaform2;
 	
+    private Logger                        log   = LoggerFactory.getLogger(SocketSendMessage.class);
+
 	public SocketSendMessage(WebSocketSession user,
 							Map<WebSocketSession, String> userType,
 							PingTaiTradeService service,
@@ -43,7 +47,6 @@ public class SocketSendMessage implements Runnable {
 							String tufaQingkuang,
 							String plaform1,
 							String plaform2) {
-		// TODO Auto-generated constructor stub
 		this.user = user;
 		this.userType = userType;
 		this.service = service;
@@ -56,7 +59,6 @@ public class SocketSendMessage implements Runnable {
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		if(StringUtils.isEmpty(rate)) {
 			rate = "168.5";			
 		}
@@ -87,23 +89,23 @@ public class SocketSendMessage implements Runnable {
 				
                 jsonRoot.put(ConstantParam.RESPONSE_STATUS, "SUCCESS");
                 jsonRoot.put(ConstantParam.RESPONSE_SYSTEM_TIME, systemTime);
+                jsonRoot.put(ConstantParam.RESPONSE_EXCHANGERATE, rate);
                 jsonRoot.put(ConstantParam.RESPONSE_PLATFORM1, plaform1);
                 jsonRoot.put(ConstantParam.RESPONSE_PLATFORM2, plaform2);
                 jsonRoot.put(ConstantParam.RESPONSE_COMPAIRE_DATA, WakuangStringUtils.beanToString(rs));
-				System.out.println(jsonRoot.toString());
+                if (log.isInfoEnabled()) {
+                    log.info(jsonRoot.toString());
+                }
 				user.sendMessage(new TextMessage(jsonRoot.toString()));
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+                log.error("", e);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+                log.error("", e);
 			}
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+                log.error("", e);
 			}
 		}
 	}

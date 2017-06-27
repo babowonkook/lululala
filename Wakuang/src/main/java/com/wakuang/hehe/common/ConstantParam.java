@@ -62,6 +62,7 @@ public class ConstantParam {
     public static final String RESPONSE_STATUS        = "STATUS";
     public static final String RESPONSE_SYSTEM_TIME   = "SYSTEM_TIME";
     public static final String RESPONSE_COMPAIRE_DATA = "COMPAIRE_DATA";
+    public static final String RESPONSE_EXCHANGERATE  = "EXCHANGERATE";
     public static final String RESPONSE_PLATFORM1     = "PLATFORM1";
     public static final String RESPONSE_PLATFORM2     = "PLATFORM2";
 
