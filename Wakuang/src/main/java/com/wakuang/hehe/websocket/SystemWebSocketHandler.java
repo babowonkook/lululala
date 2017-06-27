@@ -24,41 +24,39 @@ public class SystemWebSocketHandler implements WebSocketHandler {
 	
 	private Logger log = LoggerFactory.getLogger(SystemWebSocketHandler.class);  
     
-    private static final ArrayList<WebSocketSession> users = new ArrayList<WebSocketSession>();;
+    private static final ArrayList<WebSocketSession> users    = new ArrayList<>();;
     
     private Map<WebSocketSession, String> userType = new ConcurrentHashMap<>();
     
-    private ExecutorService ExecutorService;
+    private ExecutorService excutorService;
     
     private PingTaiTradeService service;
     
     public SystemWebSocketHandler(PingTaiTradeService service) {
-		// TODO Auto-generated constructor stub
     	this.service = service;
     }
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus arg1) throws Exception {
-		// TODO Auto-generated method stub
 		users.remove(session);  
-        log.debug("afterConnectionClosed" + arg1.getReason()); 
+        log.info("afterConnectionClosed" + arg1.getReason());
 	}
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		// TODO Auto-generated method stub
-		System.out.println("ConnectionEstablished");  
-        log.debug("ConnectionEstablished");  
+        log.info("ConnectionEstablished");
         users.add(session);  
  
 	}
 
 	@Override
-	public void handleMessage(WebSocketSession arg0, WebSocketMessage<?> arg1) throws Exception {
-		// TODO Auto-generated method stub
-		System.out.println("handleMessage" + arg1.toString());  
-        log.debug("handleMessage" + arg1.toString());
-        JsonNode jsonNode = WakuangStringUtils.stringToJsonNode(arg1.getPayload().toString());
+	public void handleMessage(WebSocketSession webSocketSession, WebSocketMessage<?> webSocketMessage) throws Exception {
+
+        if (log.isInfoEnabled()) {
+            log.info("remote ip : " + webSocketSession.getRemoteAddress());;
+            log.info("handleMessage" + webSocketMessage.toString());
+        }
+        JsonNode jsonNode = WakuangStringUtils.stringToJsonNode(webSocketMessage.getPayload().toString());
         if(jsonNode == null) {
         	return;
         }
@@ -68,30 +66,27 @@ public class SystemWebSocketHandler implements WebSocketHandler {
         String tufaQingkuang = jsonNode.get("tufaQingkuang").asText();
         String buyPlatform = jsonNode.get("buyPlatform") != null ? jsonNode.get("buyPlatform").asText() : ConstantParam.PLAFORM_BIDUOBAO;
         String sellPlatform = jsonNode.get("sellPlatform") != null ? jsonNode.get("sellPlatform").asText() : ConstantParam.PLAFORM_BITHUM;
-        if("1".equals(type) && userType.get(arg0) == null || ConstantParam.N.equals(userType.get(arg0)) ) {
-        	ExecutorService = Executors.newFixedThreadPool(1);
-        	userType.put(arg0, ConstantParam.Y);
-        	ExecutorService.execute(new SocketSendMessage(arg0, userType, service, rate, totalPrice, tufaQingkuang, buyPlatform, sellPlatform));
-        	ExecutorService.shutdown();
+        if("1".equals(type) && userType.get(webSocketSession) == null || ConstantParam.N.equals(userType.get(webSocketSession)) ) {
+        	excutorService = Executors.newFixedThreadPool(1);
+        	userType.put(webSocketSession, ConstantParam.Y);
+        	excutorService.execute(new SocketSendMessage(webSocketSession, userType, service, rate, totalPrice, tufaQingkuang, buyPlatform, sellPlatform));
+        	excutorService.shutdown();
         }else if("2".equals(type)) {
-        	userType.put(arg0, ConstantParam.N);
+        	userType.put(webSocketSession, ConstantParam.N);
         }
 	}
 
 	@Override
 	public void handleTransportError(WebSocketSession arg0, Throwable arg1) throws Exception {
-		// TODO Auto-generated method stub
 		if (arg0.isOpen()) {
 			arg0.close();
 		}
 		users.remove(arg0);
-
-		log.debug("handleTransportError" + arg1.getMessage());
+        log.error("handleTransportError" + arg1.getMessage());
 	}
 
 	@Override
 	public boolean supportsPartialMessages() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
@@ -102,7 +97,7 @@ public class SystemWebSocketHandler implements WebSocketHandler {
                     user.sendMessage(message);  
                 }  
             } catch (IOException e) {  
-                e.printStackTrace();  
+                log.error("", e);
             }  
         }  
     }  
