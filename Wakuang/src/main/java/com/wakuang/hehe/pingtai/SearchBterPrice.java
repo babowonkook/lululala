@@ -2,14 +2,11 @@ package com.wakuang.hehe.pingtai;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.wakuang.hehe.common.ConstantParam;
 import com.wakuang.hehe.hanguo.util.SslTest;
 import com.wakuang.hehe.utils.WakuangStringUtils;
@@ -54,11 +51,11 @@ public class SearchBterPrice implements SearchPingtaiPrice {
         BigDecimal feeRate = null;
         switch (coinType) {
             case ConstantParam.COINTYPE_BTC:
-            case ConstantParam.COINTYPE_LTC:
+            case ConstantParam.COINTYPE_DASH:
                 feeRate = new BigDecimal("0.002");
                 break;
+            case ConstantParam.COINTYPE_LTC:
             case ConstantParam.COINTYPE_ETH:
-            case ConstantParam.COINTYPE_DASH:
             case ConstantParam.COINTYPE_ETC:
             case ConstantParam.COINTYPE_XRP:
                 feeRate = new BigDecimal("0.001");
@@ -78,10 +75,14 @@ public class SearchBterPrice implements SearchPingtaiPrice {
             case ConstantParam.COINTYPE_BTC:
             case ConstantParam.COINTYPE_LTC:
             case ConstantParam.COINTYPE_ETH:
-            case ConstantParam.COINTYPE_DASH:
             case ConstantParam.COINTYPE_ETC:
-            case ConstantParam.COINTYPE_XRP:
                 depositFee = new BigDecimal("0.001");
+                break;
+            case ConstantParam.COINTYPE_DASH:
+                depositFee = new BigDecimal("0.01");
+                break;
+            case ConstantParam.COINTYPE_XRP:
+                depositFee = new BigDecimal("0.00");
                 break;
             case ConstantParam.COINTYPE_CASH:
             	depositFee = new BigDecimal("0.005");
