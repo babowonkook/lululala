@@ -9,7 +9,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.wakuang.hehe.common.ConstantParam;
@@ -86,9 +85,11 @@ public class SocketSendMessage implements Runnable {
 				ObjectMapper mapper = new ObjectMapper();
 				ObjectNode jsonRoot = mapper.createObjectNode();
 				
-				jsonRoot.put("STATUS", "SUCCESS");
-				jsonRoot.put("SYSTEM_TIME", systemTime);
-				jsonRoot.put("COMPAIRE_DATA", WakuangStringUtils.beanToString(rs));
+                jsonRoot.put(ConstantParam.RESPONSE_STATUS, "SUCCESS");
+                jsonRoot.put(ConstantParam.RESPONSE_SYSTEM_TIME, systemTime);
+                jsonRoot.put(ConstantParam.RESPONSE_PLATFORM1, plaform1);
+                jsonRoot.put(ConstantParam.RESPONSE_PLATFORM2, plaform2);
+                jsonRoot.put(ConstantParam.RESPONSE_COMPAIRE_DATA, WakuangStringUtils.beanToString(rs));
 				System.out.println(jsonRoot.toString());
 				user.sendMessage(new TextMessage(jsonRoot.toString()));
 			} catch (IOException e) {

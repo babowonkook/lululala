@@ -167,6 +167,11 @@
         function setCoinGrid(data){
         	var jsonInfo = JSON.parse(data);
         	$("#sysTime").html(jsonInfo.SYSTEM_TIME);
+        	$("#plaform1th").html(jsonInfo.PLATFORM1);
+        	$("#plaform1krwth").html(jsonInfo.PLATFORM1 + "_KRW");
+        	$("#plaform2th").html(jsonInfo.PLATFORM2);
+        	
+        	
         	var html = "";
         	
         	var result = JSON.parse(jsonInfo.COMPAIRE_DATA);
@@ -320,9 +325,9 @@
 	    		<tr>
 	    		<th width="50">方向</th>
 	    		<th width="60">币种</th>
-	    		<th>平台1价格</th>
-	    		<th>平台1韩元价格</th>
-	    		<th>平台2价格</th>
+	    		<th id="plaform1th">平台1价格</th>
+	    		<th id="plaform1krwth">平台1韩元价格</th>
+	    		<th id="plaform2th">平台2价格</th>
 	    		<th>差价</th>
 	    		<th width="50">收益率</th>
 	    		<th width="60">收益额</th>

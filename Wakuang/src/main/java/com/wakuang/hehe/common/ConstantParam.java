@@ -59,6 +59,12 @@ public class ConstantParam {
 	public static final String SELL_PRICE = "sell_price";
 	public static final String CLOSING_PRICE = "closing_price";
 
+    public static final String RESPONSE_STATUS        = "STATUS";
+    public static final String RESPONSE_SYSTEM_TIME   = "SYSTEM_TIME";
+    public static final String RESPONSE_COMPAIRE_DATA = "COMPAIRE_DATA";
+    public static final String RESPONSE_PLATFORM1     = "PLATFORM1";
+    public static final String RESPONSE_PLATFORM2     = "PLATFORM2";
+
 	public static final String Y = "Y";
 	public static final String N = "N";
 
