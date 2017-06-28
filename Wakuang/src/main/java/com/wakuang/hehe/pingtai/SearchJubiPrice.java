@@ -1,23 +1,25 @@
 package com.wakuang.hehe.pingtai;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.wakuang.hehe.common.ConstantParam;
 import com.wakuang.hehe.hanguo.util.SslTest;
 import com.wakuang.hehe.utils.WakuangStringUtils;
 
 @Service("jubiService")
 public class SearchJubiPrice implements SearchPingtaiPrice {
+    private Logger log = LoggerFactory.getLogger(SearchJubiPrice.class);
+
     public Map<String, Map<String, BigDecimal>> getPrice() throws Exception {
-        
+        Date startDate = new Date();
 		String coinTypes[] = {ConstantParam.COINTYPE_BTC, ConstantParam.COINTYPE_ETH, ConstantParam.COINTYPE_LTC, ConstantParam.COINTYPE_DASH, ConstantParam.COINTYPE_ETC, ConstantParam.COINTYPE_XRP};
 		String result;
 		Map<String, Map<String, BigDecimal>> coins = new HashMap<>();
@@ -40,11 +42,12 @@ public class SearchJubiPrice implements SearchPingtaiPrice {
 				coins.put(coin, coinInfo);
 			}
 		}
-        
-        
-        
- 
-        System.out.println(ConstantParam.PLAFORM_JUBI + ":  " + coins.toString());
+        Date endDate = new Date();
+        long costSec = endDate.getTime() - startDate.getTime();
+        if (log.isInfoEnabled()) {
+            log.info("cost Time: {} seconds", costSec / 1000);
+            log.info(ConstantParam.PLAFORM_JUBI + ":  " + coins.toString());
+        }
         return coins;
 
     }

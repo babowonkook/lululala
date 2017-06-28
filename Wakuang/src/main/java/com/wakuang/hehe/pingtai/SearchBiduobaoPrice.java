@@ -1,11 +1,14 @@
 package com.wakuang.hehe.pingtai;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -16,7 +19,11 @@ import com.wakuang.hehe.utils.WakuangStringUtils;
 
 @Service("biduobaoService")
 public class SearchBiduobaoPrice implements SearchPingtaiPrice {
+
+    private Logger log = LoggerFactory.getLogger(SearchBiduobaoPrice.class);
+
     public Map<String, Map<String, BigDecimal>> getPrice() throws Exception {
+        Date startDate = new Date();
         String url = "https://www.biduobao.com/coin/allcoin?t=123123";
         String html = SslTest.getRequest(url, 10000);
         JsonNode rootNode = WakuangStringUtils.stringToJsonNode(html);
@@ -63,7 +70,12 @@ public class SearchBiduobaoPrice implements SearchPingtaiPrice {
             }
 
         }
-        System.out.println(ConstantParam.PLAFORM_BIDUOBAO + ":  " + coins.toString());
+        Date endDate = new Date();
+        long costSec = endDate.getTime() - startDate.getTime();
+        if (log.isInfoEnabled()) {
+            log.info("cost Time: {} seconds", costSec / 1000);
+            log.info(ConstantParam.PLAFORM_BIDUOBAO + ":  " + coins.toString());
+        }
         return coins;
 
     }

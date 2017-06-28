@@ -1,9 +1,12 @@
 package com.wakuang.hehe.pingtai;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,8 +16,11 @@ import com.wakuang.hehe.utils.WakuangStringUtils;
 
 @Service("bterService")
 public class SearchBterPrice implements SearchPingtaiPrice {
+
+    private Logger log = LoggerFactory.getLogger(SearchBterPrice.class);
+
     public Map<String, Map<String, BigDecimal>> getPrice() throws Exception {
-        
+        Date startDate = new Date();
 		String coinTypes[] = {ConstantParam.COINTYPE_BTC, ConstantParam.COINTYPE_ETH, ConstantParam.COINTYPE_LTC, ConstantParam.COINTYPE_DASH, ConstantParam.COINTYPE_ETC, ConstantParam.COINTYPE_XRP};
 		String result;
 		Map<String, Map<String, BigDecimal>> coins = new HashMap<>();
@@ -38,10 +44,12 @@ public class SearchBterPrice implements SearchPingtaiPrice {
 			}
 		}
         
-        
-        
- 
-        System.out.println(ConstantParam.PLAFORM_BETR + ":  " + coins.toString());
+        Date endDate = new Date();
+        long costSec = endDate.getTime() - startDate.getTime();
+        if (log.isInfoEnabled()) {
+            log.info("cost Time: {} seconds", costSec / 1000);
+            log.info(ConstantParam.PLAFORM_BETR + ":  " + coins.toString());
+        }
         return coins;
 
     }

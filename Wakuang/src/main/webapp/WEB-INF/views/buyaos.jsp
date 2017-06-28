@@ -263,17 +263,28 @@
         } 
         
         function jiSuanQi() {
+            
+            var buyPlatform = $("#buyPlatform").val();
+            var rate = "";
+            if("COINCHECK"){
+                rate = $("#rate_JPY").val();
+            }else if("haha"){
+                rate = $("#rate_USD").val();
+            }else{
+                rate = $("#rate_CNY").val();
+            }
+            
         	$.ajax({
         	     type: 'GET',
         	     url: '/home/yieldRate' ,
         	     data: {
         	    	 "buy_price":$("#buyPrice").val(),
-        	    	 "buyPlatform":$("#buyPlatform").val(),
+        	    	 "buyPlatform":buyPlatform,
         	    	 "coinType":$("#coinType").val(),
         	    	 "buyNum":$("#buyNum").val(),
         	    	 "sellPlatform":$("#sellPlatform").val(),
         	    	 "sell_price":$("#sellPrice").val(),
-        	    	 "rate":$("#rate").val()
+        	    	 "rate":rate
         	     } ,
         	     success: function(data) {
         	    	 console.info(data);
@@ -397,6 +408,8 @@
 						<option value='BIDUOBAO'>币多宝</option>
 						<option value='BITHUM'>BITHUM</option>
 						<option value='JUBI'>JUBI</option>
+						<option value='BETR'>BETR</option>
+						<option value='COINCHECK'>COINCHECK</option>
 					</select>
 				</td>
 				

@@ -1,9 +1,12 @@
 package com.wakuang.hehe.pingtai;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +17,13 @@ import com.wakuang.hehe.utils.WakuangStringUtils;
 
 @Service(value = "bithumbService")
 public class SearchBithumbPrice implements SearchPingtaiPrice {
+    private Logger        log = LoggerFactory.getLogger(SearchBithumbPrice.class);
 	
 	@Autowired
 	private HanguoService hanguoSerivce;
 	
 	@Override
 	public BigDecimal getTakerFee(BigDecimal amt, String coinType) {
-		// TODO Auto-generated method stub
 		BigDecimal feeRate = null;
         switch (coinType) {
             case ConstantParam.COINTYPE_BTC:
@@ -41,7 +44,6 @@ public class SearchBithumbPrice implements SearchPingtaiPrice {
 
 	@Override
 	public BigDecimal getDepositFee(BigDecimal amt, String coinType, String tufaQingkuang) {
-		// TODO Auto-generated method stub
 		 BigDecimal depositFee = null;
 	        switch (coinType) {
 	            case ConstantParam.COINTYPE_BTC:
@@ -69,7 +71,7 @@ public class SearchBithumbPrice implements SearchPingtaiPrice {
 
 	@Override
 	public Map<String, Map<String, BigDecimal>> getPrice() throws Exception {
-		// TODO Auto-generated method stub
+        Date startDate = new Date();
 		String coinTypes[] = {ConstantParam.COINTYPE_BTC, ConstantParam.COINTYPE_ETH, ConstantParam.COINTYPE_LTC, ConstantParam.COINTYPE_DASH, ConstantParam.COINTYPE_ETC, ConstantParam.COINTYPE_XRP};
 		String result;
 		Map<String, Map<String, BigDecimal>> coins = new HashMap<>();
@@ -87,7 +89,13 @@ public class SearchBithumbPrice implements SearchPingtaiPrice {
 				coins.put(coin, coinInfo);
 			}
 		}
-		System.out.println(ConstantParam.PLAFORM_BITHUM + ":  " + coins.toString());
+
+        Date endDate = new Date();
+        long costSec = endDate.getTime() - startDate.getTime();
+        if (log.isInfoEnabled()) {
+            log.info("cost Time: {} seconds", costSec / 1000);
+            log.info(ConstantParam.PLAFORM_BITHUM + ":  " + coins.toString());
+        }
 		return coins;
 	}
 

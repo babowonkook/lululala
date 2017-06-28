@@ -96,7 +96,6 @@ public class PingTaiTradeService {
         SearchPingtaiPrice searchBithumbPrice = serviceMap.get(ConstantParam.PLAFORM_BITHUM);
         SearchPingtaiPrice searchBiduobaoPrice = serviceMap.get(ConstantParam.PLAFORM_BIDUOBAO);
         SearchPingtaiPrice searchJubiPrice = serviceMap.get(ConstantParam.PLAFORM_JUBI);
-        SearchPingtaiPrice searchOkcoinPrice = serviceMap.get(ConstantParam.PLAFORM_OKCOIN);
         SearchPingtaiPrice searchBetrPrice = serviceMap.get(ConstantParam.PLAFORM_BETR);
         SearchPingtaiPrice searchCoincheckPrice = serviceMap.get(ConstantParam.PLAFORM_COINCHECK);
         Map<String, Map<String, BigDecimal>> bitumbPrice = searchBithumbPrice.getPrice();
