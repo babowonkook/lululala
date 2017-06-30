@@ -218,9 +218,9 @@
 		        	    html = html + "<td>" + fromTo + "</td>";
 		        	    html = html + "<td>" + j + "</td>";
 		        	    html = html + "<td>" + formatMoney(result.map.PRICE, true) + "</td>";
-		        	    html = html + "<td>" + formatMoney(parseFloat((result.map.PRICE) * parseFloat(thisRate))+"", true) + "</td>";
-		        	    html = html + "<td>" + formatMoney(result.map2.PRICE, true) + "</td>";
-		        	    html = html + "<td>" + formatMoney(result.compare, true) + "</td>";
+		        	    html = html + "<td>" + formatMoney(parseFloat((result.map.PRICE) * parseFloat(jsonComaireDatas[i].COMPAIRE_INFO.EXCHANGERATE))+"", 0) + "</td>";
+		        	    html = html + "<td>" + formatMoney(result.map2.PRICE, 0) + "</td>";
+		        	    html = html + "<td>" + formatMoney(result.compare, 0) + "</td>";
 		        	    html = html + "<td>" + ((result.shouyi_rate*100).toFixed(4)) + "%</td>";
 		        	    html = html + "<td>" + formatMoney(result.shouyi_e.toFixed(0)/10000, true) + "</td>";
 		        	    
@@ -242,7 +242,7 @@
         
         function formatMoney(s, type) {  
         	s = s+"";
-            if (/[^0-9\.]/.test(s))  
+            if (/[^0-9\.\-]/.test(s))  
                 return "0";  
             if (s == null || s == "")  
                 return "0";  
@@ -255,9 +255,9 @@
             s = s.replace(/,(\d\d)$/, ".$1");  
             if (type == 0) {// 不带小数位(默认是有小数位)  
                 var a = s.split(".");  
-                if (a[1] == "00") {  
+                //if (a[1] == "00") {  
                     s = a[0];  
-                }  
+                //}  
             }  
             return s;  
         } 
@@ -266,9 +266,9 @@
             
             var buyPlatform = $("#buyPlatform").val();
             var rate = "";
-            if("COINCHECK"){
+            if("COINCHECK" == buyPlatform){
                 rate = $("#rate_JPY").val();
-            }else if("haha"){
+            }else if("haha" == buyPlatform){
                 rate = $("#rate_USD").val();
             }else{
                 rate = $("#rate_CNY").val();
