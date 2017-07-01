@@ -34,6 +34,10 @@ public class PingTaiTradeService {
     @Autowired
     @Qualifier("bterService")
     private SearchBterPrice searchBterPrice;
+    
+    @Autowired
+    @Qualifier("btceService")
+    private SearchBtcEPrice searchBtcePrice;
 
     public BigDecimal buyCoin(String plaform,
             String coinType,
@@ -98,20 +102,24 @@ public class PingTaiTradeService {
         SearchPingtaiPrice searchJubiPrice = serviceMap.get(ConstantParam.PLAFORM_JUBI);
         SearchPingtaiPrice searchBetrPrice = serviceMap.get(ConstantParam.PLAFORM_BETR);
         SearchPingtaiPrice searchCoincheckPrice = serviceMap.get(ConstantParam.PLAFORM_COINCHECK);
+        SearchPingtaiPrice searchBtcePrice = serviceMap.get(ConstantParam.PLAFORM_BTCE);
         Map<String, Map<String, BigDecimal>> bitumbPrice = searchBithumbPrice.getPrice();
         Map<String, Map<String, BigDecimal>> biduobaoPrice = searchBiduobaoPrice.getPrice();
         Map<String, Map<String, BigDecimal>> jubiPrice = searchJubiPrice.getPrice();
-        Map<String, Map<String, BigDecimal>> coincheckPrice = searchCoincheckPrice.getPrice();
         Map<String, Map<String, BigDecimal>> betrPrice = searchBetrPrice.getPrice();
+        Map<String, Map<String, BigDecimal>> coincheckPrice = searchCoincheckPrice.getPrice();
+        Map<String, Map<String, BigDecimal>> btcePrice = searchBtcePrice.getPrice();
         List<Map<String, Object>> comparList = new ArrayList<>();
         Map<String, Object> compare1 = compare(biduobaoPrice, bitumbPrice, ConstantParam.PLAFORM_BIDUOBAO, ConstantParam.PLAFORM_BITHUM, totalPrice, CNY, tk);
         Map<String, Object> compare2 = compare(jubiPrice, bitumbPrice, ConstantParam.PLAFORM_JUBI, ConstantParam.PLAFORM_BITHUM, totalPrice, CNY, tk);
         Map<String, Object> compare3 = compare(betrPrice, bitumbPrice, ConstantParam.PLAFORM_BETR, ConstantParam.PLAFORM_BITHUM, totalPrice, CNY, tk);
         Map<String, Object> compare4 = compare(coincheckPrice, bitumbPrice, ConstantParam.PLAFORM_COINCHECK, ConstantParam.PLAFORM_BITHUM, totalPrice, JPY, tk);
+        Map<String, Object> compare5 = compare(btcePrice, bitumbPrice, ConstantParam.PLAFORM_BTCE, ConstantParam.PLAFORM_BITHUM, totalPrice, USD, tk);
         comparList.add(compare1);
         comparList.add(compare2);
         comparList.add(compare3);
         comparList.add(compare4);
+        comparList.add(compare5);
         return comparList;
     }
 
@@ -175,6 +183,7 @@ public class PingTaiTradeService {
 		rs.put(ConstantParam.PLAFORM_JUBI, jubiService);
         rs.put(ConstantParam.PLAFORM_COINCHECK, coincheckService);
         rs.put(ConstantParam.PLAFORM_BETR, searchBterPrice);
+        rs.put(ConstantParam.PLAFORM_BTCE, searchBtcePrice);
 		return rs;
 	}
 	
