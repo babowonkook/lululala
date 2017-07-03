@@ -84,7 +84,7 @@ public class SearchJubiPrice implements SearchPingtaiPrice {
             case ConstantParam.COINTYPE_DASH:
             case ConstantParam.COINTYPE_ETC:
             case ConstantParam.COINTYPE_XRP:
-                depositFee = new BigDecimal("0.001");
+                depositFee = new BigDecimal("0.01");
                 break;
             case ConstantParam.COINTYPE_CASH:
             	depositFee = new BigDecimal("0.005");
