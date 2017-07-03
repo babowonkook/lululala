@@ -111,9 +111,9 @@ public class SearchBiduobaoPrice implements SearchPingtaiPrice {
             case ConstantParam.COINTYPE_ETH:
             case ConstantParam.COINTYPE_DASH:
             case ConstantParam.COINTYPE_ETC:
-            case ConstantParam.COINTYPE_XRP:
                 depositFee = new BigDecimal("0.001");
                 break;
+            case ConstantParam.COINTYPE_XRP:
             case ConstantParam.COINTYPE_CASH:
             	depositFee = new BigDecimal("0.005");
             	break;
