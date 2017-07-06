@@ -217,7 +217,13 @@
 		        	    html = html + "<tr " + trColor + ">";
 		        	    html = html + "<td>" + fromTo + "</td>";
 		        	    html = html + "<td>" + j + "</td>";
-		        	    html = html + "<td>" + formatMoney(result.map.PRICE, true) + "</td>";
+		        	    html = html + "<td>";
+		        	    if("XRP"==j){
+		        	        html = html + result.map.PRICE;
+		        	    }else{
+			        	    html = html + formatMoney(result.map.PRICE, true);
+		        	    }
+		        	    html = html + "</td>";
 		        	    html = html + "<td>" + formatMoney(parseFloat((result.map.PRICE) * parseFloat(jsonComaireDatas[i].COMPAIRE_INFO.EXCHANGERATE))+"", 0) + "</td>";
 		        	    html = html + "<td>" + formatMoney(result.map2.PRICE, 0) + "</td>";
 		        	    html = html + "<td>" + formatMoney(result.compare, 0) + "</td>";
