@@ -76,18 +76,28 @@ public class SearchJubiPrice implements SearchPingtaiPrice {
     public BigDecimal getDepositFee(BigDecimal amt,
                                      String coinType,
                                      String tufaQingkuang) {
+        // 2017-07-10 갱신
+        // 수수료 정액 정율 구분 하여 더정확함
         BigDecimal depositFee = null;
+        boolean isRate = false;
         switch (coinType) {
             case ConstantParam.COINTYPE_BTC:
-            case ConstantParam.COINTYPE_LTC:
+                depositFee = new BigDecimal("0.0005");
+                isRate = false;
+                break;
             case ConstantParam.COINTYPE_ETH:
-            case ConstantParam.COINTYPE_DASH:
             case ConstantParam.COINTYPE_ETC:
+                depositFee = new BigDecimal("0.01");
+                isRate = false;
+                break;
+            case ConstantParam.COINTYPE_LTC:
             case ConstantParam.COINTYPE_XRP:
                 depositFee = new BigDecimal("0.01");
+                isRate = true;
                 break;
             case ConstantParam.COINTYPE_CASH:
             	depositFee = new BigDecimal("0.005");
+                isRate = true;
             	break;
             default:
                 depositFee = new BigDecimal("100");
@@ -96,7 +106,11 @@ public class SearchJubiPrice implements SearchPingtaiPrice {
     	if("yes".equals(tufaQingkuang)) {
     		depositFee = new BigDecimal("0.02");
     	}
-        return amt.multiply(depositFee);
+        if (isRate) {
+            return amt.multiply(depositFee);
+        } else {
+            return depositFee;
+        }
     }
 
 }

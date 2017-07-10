@@ -21,22 +21,47 @@ public class SearchCoincheckPrice implements SearchPingtaiPrice {
 
     public Map<String, Map<String, BigDecimal>> getPrice() throws Exception {
         Date startDate = new Date();
+        String coinTypes[] = { ConstantParam.COINTYPE_BTC, ConstantParam.COINTYPE_ETH, ConstantParam.COINTYPE_LTC, ConstantParam.COINTYPE_DASH, ConstantParam.COINTYPE_ETC, ConstantParam.COINTYPE_XRP };
         String result;
         Map<String, Map<String, BigDecimal>> coins = new HashMap<>();
+        for (String coin : coinTypes) {
 
-        String coin = ConstantParam.COINTYPE_BTC;
-        String url = "https://coincheck.com/api/ticker";
-        result = SslTest.getRequest(url, 3000);
-        JsonNode rootNode = WakuangStringUtils.stringToJsonNode(result);
-        if (rootNode != null) {
-            Map<String, BigDecimal> coinInfo = new HashMap<String, BigDecimal>();
-            coinInfo.put(ConstantParam.COIN_INFO_MAX, new BigDecimal(rootNode.get("high").asText()));
-            coinInfo.put(ConstantParam.COIN_INFO_MIN, new BigDecimal(rootNode.get("low").asText()));
-            coinInfo.put(ConstantParam.COIN_INFO_BUY, new BigDecimal(rootNode.get("bid").asText()));
-            coinInfo.put(ConstantParam.COIN_INFO_SELL, new BigDecimal(rootNode.get("ask").asText()));
-            coinInfo.put(ConstantParam.COIN_INFO_PRICE, new BigDecimal(rootNode.get("last").asText()));
-            coins.put(coin, coinInfo);
+            String url = "https://coincheck.com/api/rate/";
+            url = url + coin.toLowerCase() + "_jpy";
+            result = SslTest.getRequest(url, 3000);
+            JsonNode rootNode = WakuangStringUtils.stringToJsonNode(result);
+            if (rootNode != null) {
+                if (rootNode.get("rate") == null || "false".equals(rootNode.get("success"))) {
+                    continue;
+                }
+                Map<String, BigDecimal> coinInfo = new HashMap<String, BigDecimal>();
+                coinInfo.put(ConstantParam.COIN_INFO_MAX, BigDecimal.ZERO);
+                coinInfo.put(ConstantParam.COIN_INFO_MIN, BigDecimal.ZERO);
+                coinInfo.put(ConstantParam.COIN_INFO_BUY, BigDecimal.ZERO);
+                coinInfo.put(ConstantParam.COIN_INFO_SELL, BigDecimal.ZERO);
+                coinInfo.put(ConstantParam.COIN_INFO_PRICE, new BigDecimal(rootNode.get("rate").asText()));
+                coins.put(coin, coinInfo);
+            }
         }
+
+        // Date startDate = new Date();
+        // String result;
+        // Map<String, Map<String, BigDecimal>> coins = new HashMap<>();
+        //
+        // String coin = ConstantParam.COINTYPE_BTC;
+        // String url = "https://coincheck.com/api/ticker";
+        // result = SslTest.getRequest(url, 3000);
+        // JsonNode rootNode = WakuangStringUtils.stringToJsonNode(result);
+        // if (rootNode != null) {
+        // Map<String, BigDecimal> coinInfo = new HashMap<String, BigDecimal>();
+        // coinInfo.put(ConstantParam.COIN_INFO_MAX, new BigDecimal(rootNode.get("high").asText()));
+        // coinInfo.put(ConstantParam.COIN_INFO_MIN, new BigDecimal(rootNode.get("low").asText()));
+        // coinInfo.put(ConstantParam.COIN_INFO_BUY, new BigDecimal(rootNode.get("bid").asText()));
+        // coinInfo.put(ConstantParam.COIN_INFO_SELL, new BigDecimal(rootNode.get("ask").asText()));
+        // coinInfo.put(ConstantParam.COIN_INFO_PRICE, new BigDecimal(rootNode.get("last").asText()));
+        // coins.put(coin, coinInfo);
+        // }
+
         Date endDate = new Date();
         long costSec = endDate.getTime() - startDate.getTime();
         if (log.isInfoEnabled()) {
