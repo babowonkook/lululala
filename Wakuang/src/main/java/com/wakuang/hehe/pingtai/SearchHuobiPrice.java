@@ -80,10 +80,10 @@ public class SearchHuobiPrice implements SearchPingtaiPrice {
         BigDecimal feeRate = null;
         switch (coinType) {
             case ConstantParam.COINTYPE_BTC:
+            case ConstantParam.COINTYPE_LTC:
             case ConstantParam.COINTYPE_DASH:
                 feeRate = new BigDecimal("0.002");
                 break;
-            case ConstantParam.COINTYPE_LTC:
             case ConstantParam.COINTYPE_ETH:
             case ConstantParam.COINTYPE_ETC:
             case ConstantParam.COINTYPE_XRP:
