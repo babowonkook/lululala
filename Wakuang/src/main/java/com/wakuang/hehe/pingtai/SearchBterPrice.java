@@ -29,7 +29,13 @@ public class SearchBterPrice implements SearchPingtaiPrice {
 			String url = "http://data.bter.com/api2/1/ticker/";
 			url = url + coin.toLowerCase() + "_cny";
 			result = SslTest.getRequest(url, 3000);
-			JsonNode rootNode = WakuangStringUtils.stringToJsonNode(result);
+            JsonNode rootNode = null;
+            try {
+                rootNode = WakuangStringUtils.stringToJsonNode(result);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 			if(rootNode != null) {
 				if(rootNode.get("result") == null || "false".equals(rootNode.get("result"))){
 					continue;

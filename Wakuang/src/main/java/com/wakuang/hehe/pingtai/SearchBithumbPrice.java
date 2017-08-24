@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.wakuang.hehe.common.ConstantParam;
 import com.wakuang.hehe.hanguo.service.HanguoService;
+import com.wakuang.hehe.hanguo.util.SslTest;
 import com.wakuang.hehe.utils.WakuangStringUtils;
 
 @Service(value = "bithumbService")
@@ -72,23 +73,25 @@ public class SearchBithumbPrice implements SearchPingtaiPrice {
 	@Override
 	public Map<String, Map<String, BigDecimal>> getPrice() throws Exception {
         Date startDate = new Date();
-		String coinTypes[] = {ConstantParam.COINTYPE_BTC, ConstantParam.COINTYPE_ETH, ConstantParam.COINTYPE_LTC, ConstantParam.COINTYPE_DASH, ConstantParam.COINTYPE_ETC, ConstantParam.COINTYPE_XRP};
+        String coinTypes[] = { ConstantParam.COINTYPE_BTC, ConstantParam.COINTYPE_ETH, ConstantParam.COINTYPE_LTC, ConstantParam.COINTYPE_DASH, ConstantParam.COINTYPE_ETC, ConstantParam.COINTYPE_XRP, ConstantParam.COINTYPE_BCH };
 		String result;
 		Map<String, Map<String, BigDecimal>> coins = new HashMap<>();
-		for(String coin : coinTypes) {
-			result = hanguoSerivce.getTicker(coin);
-			JsonNode rootNode = WakuangStringUtils.stringToJsonNode(result);
-			if(rootNode != null && rootNode.get(ConstantParam.STATUS) !=null && "0000".equals(rootNode.get(ConstantParam.STATUS).asText())) {
-				JsonNode data = rootNode.get("data");
-				Map<String, BigDecimal> coinInfo = new HashMap<String, BigDecimal>();
-				coinInfo.put(ConstantParam.COIN_INFO_MAX, new BigDecimal(data.get(ConstantParam.MAX_PRICE).asText()));
-				coinInfo.put(ConstantParam.COIN_INFO_MIN, new BigDecimal(data.get(ConstantParam.MIN_PRICE).asText()));
-				coinInfo.put(ConstantParam.COIN_INFO_BUY, new BigDecimal(data.get(ConstantParam.BUY_PRICE).asText()));
-				coinInfo.put(ConstantParam.COIN_INFO_SELL, new BigDecimal(data.get(ConstantParam.SELL_PRICE).asText()));
-				coinInfo.put(ConstantParam.COIN_INFO_PRICE, new BigDecimal(data.get(ConstantParam.CLOSING_PRICE).asText()));
-				coins.put(coin, coinInfo);
-			}
-		}
+        String tickerUrl = "https://api.bithumb.com/public/ticker/";
+        result = SslTest.getRequest(tickerUrl + ConstantParam.COINTYPE_ALL, 3000);
+        JsonNode rootNode = WakuangStringUtils.stringToJsonNode(result).get("data");
+        for (String coin : coinTypes) {
+            if (rootNode != null) {
+                JsonNode eachCoin;
+                eachCoin = rootNode.get(coin);
+                Map<String, BigDecimal> coinInfo = new HashMap<String, BigDecimal>();
+                coinInfo.put(ConstantParam.COIN_INFO_MAX, new BigDecimal(eachCoin.get("min_price").asText()));
+                coinInfo.put(ConstantParam.COIN_INFO_MIN, new BigDecimal(eachCoin.get("min_price").asText()));
+                coinInfo.put(ConstantParam.COIN_INFO_BUY, new BigDecimal(eachCoin.get("buy_price").asText()));
+                coinInfo.put(ConstantParam.COIN_INFO_SELL, new BigDecimal(eachCoin.get("sell_price").asText()));
+                coinInfo.put(ConstantParam.COIN_INFO_PRICE, new BigDecimal(eachCoin.get("sell_price").asText()));
+                coins.put(coin, coinInfo);
+            }
+        }
 
         Date endDate = new Date();
         long costSec = endDate.getTime() - startDate.getTime();

@@ -14,13 +14,15 @@ public class ConstantParam {
     public static final String PLAFORM_BETR           = "BETR";
     public static final String PLAFORM_HUOBI          = "HUOBI";
 
-	public static final String COINTYPE_BTC = "BTC";
-	public static final String COINTYPE_ETH = "ETH";
-	public static final String COINTYPE_DASH = "DASH";
-	public static final String COINTYPE_LTC = "LTC";
-	public static final String COINTYPE_ETC = "ETC";
-	public static final String COINTYPE_XRP = "XRP";
-	public static final String COINTYPE_CASH = "CASH";
+    public static final String COINTYPE_BTC           = "BTC";
+    public static final String COINTYPE_BCH           = "BCH";
+    public static final String COINTYPE_ETH           = "ETH";
+    public static final String COINTYPE_DASH          = "DASH";
+    public static final String COINTYPE_LTC           = "LTC";
+    public static final String COINTYPE_ETC           = "ETC";
+    public static final String COINTYPE_XRP           = "XRP";
+    public static final String COINTYPE_CASH          = "CASH";
+    public static final String COINTYPE_ALL           = "ALL";
 
 	public static final String COINTYPE = "coinType";
 	public static final String BUY_NUM = "buyNum";
