@@ -24,28 +24,25 @@ public class SearchBterPrice implements SearchPingtaiPrice {
 		String coinTypes[] = {ConstantParam.COINTYPE_BTC, ConstantParam.COINTYPE_ETH, ConstantParam.COINTYPE_LTC, ConstantParam.COINTYPE_DASH, ConstantParam.COINTYPE_ETC, ConstantParam.COINTYPE_XMR};
 		String result;
 		Map<String, Map<String, BigDecimal>> coins = new HashMap<>();
+		String url = "http://data.bter.com/api2/1/tickers";
+		result = SslTest.getRequest(url, 3000);
+		JsonNode rootNode = null;
+		try {
+			rootNode = WakuangStringUtils.stringToJsonNode(result);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		for(String coin : coinTypes) {
-			
-			String url = "http://data.bter.com/api2/1/ticker/";
-			url = url + coin.toLowerCase() + "_cny";
-			result = SslTest.getRequest(url, 3000);
-            JsonNode rootNode = null;
-            try {
-                rootNode = WakuangStringUtils.stringToJsonNode(result);
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
 			if(rootNode != null) {
-				if(rootNode.get("result") == null || "false".equals(rootNode.get("result"))){
-					continue;
-				}
+				JsonNode eachCoin;
+                eachCoin = rootNode.get(coin.toLowerCase()+"_cny");
 				Map<String, BigDecimal> coinInfo = new HashMap<String, BigDecimal>();
-				coinInfo.put(ConstantParam.COIN_INFO_MAX, new BigDecimal(rootNode.get("lowestAsk").asText()));
-				coinInfo.put(ConstantParam.COIN_INFO_MIN, new BigDecimal(rootNode.get("highestBid").asText()));
-				coinInfo.put(ConstantParam.COIN_INFO_BUY, new BigDecimal(rootNode.get("highestBid").asText()));
-				coinInfo.put(ConstantParam.COIN_INFO_SELL, new BigDecimal(rootNode.get("lowestAsk").asText()));
-				coinInfo.put(ConstantParam.COIN_INFO_PRICE, new BigDecimal(rootNode.get("last").asText()));
+				coinInfo.put(ConstantParam.COIN_INFO_MAX, new BigDecimal(eachCoin.get("lowestAsk").asText()));
+				coinInfo.put(ConstantParam.COIN_INFO_MIN, new BigDecimal(eachCoin.get("highestBid").asText()));
+				coinInfo.put(ConstantParam.COIN_INFO_BUY, new BigDecimal(eachCoin.get("highestBid").asText()));
+				coinInfo.put(ConstantParam.COIN_INFO_SELL, new BigDecimal(eachCoin.get("lowestAsk").asText()));
+				coinInfo.put(ConstantParam.COIN_INFO_PRICE, new BigDecimal(eachCoin.get("last").asText()));
 				coins.put(coin, coinInfo);
 			}
 		}
