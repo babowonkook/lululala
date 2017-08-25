@@ -21,6 +21,7 @@ public class ConstantParam {
     public static final String COINTYPE_LTC           = "LTC";
     public static final String COINTYPE_ETC           = "ETC";
     public static final String COINTYPE_XRP           = "XRP";
+    public static final String COINTYPE_XMR           = "XMR";
     public static final String COINTYPE_CASH          = "CASH";
     public static final String COINTYPE_ALL           = "ALL";
 

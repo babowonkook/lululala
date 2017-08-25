@@ -21,7 +21,7 @@ public class SearchBterPrice implements SearchPingtaiPrice {
 
     public Map<String, Map<String, BigDecimal>> getPrice() throws Exception {
         Date startDate = new Date();
-		String coinTypes[] = {ConstantParam.COINTYPE_BTC, ConstantParam.COINTYPE_ETH, ConstantParam.COINTYPE_LTC, ConstantParam.COINTYPE_DASH, ConstantParam.COINTYPE_ETC, ConstantParam.COINTYPE_XRP};
+		String coinTypes[] = {ConstantParam.COINTYPE_BTC, ConstantParam.COINTYPE_ETH, ConstantParam.COINTYPE_LTC, ConstantParam.COINTYPE_DASH, ConstantParam.COINTYPE_ETC, ConstantParam.COINTYPE_XMR};
 		String result;
 		Map<String, Map<String, BigDecimal>> coins = new HashMap<>();
 		for(String coin : coinTypes) {
