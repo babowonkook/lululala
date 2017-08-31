@@ -414,7 +414,7 @@
         <div>갱신시간 : <div id="sysTime"></div></div>
         
         <input type="text" id="timetext" value="00时00分00秒" readonly><br>
-    		<button type="button" onclick="start()">开始</button> <button type="button" onclick="stop()">暂停</button> <button type="button" onclick="Reset()">重置</button>
+    		<!-- <button type="button" onclick="start()">开始</button> <button type="button" onclick="stop()">暂停</button> <button type="button" onclick="Reset()">重置</button> -->
     </div>  
 
       

@@ -27,49 +27,55 @@ public class SearchBiduobaoPrice implements SearchPingtaiPrice {
         String url = "https://www.biduobao.com/coin/allcoin?t=123123";
         String html = SslTest.getRequest(url, 10000);
         JsonNode rootNode = WakuangStringUtils.stringToJsonNode(html);
-        Iterator<Entry<String, JsonNode>> jsonNodes = rootNode.fields();
-        Map coins = new HashMap<String, Map<String, BigDecimal>>();
-        while (jsonNodes.hasNext()) {
-            Entry<String, JsonNode> node = jsonNodes.next();
+        Map coins = null;
+        coins = new HashMap<String, Map<String, BigDecimal>>();
+		try {
+			Iterator<Entry<String, JsonNode>> jsonNodes = rootNode.fields();
+			while (jsonNodes.hasNext()) {
+			    Entry<String, JsonNode> node = jsonNodes.next();
 
-            JsonNode values = node.getValue();
-            ArrayNode datas = (ArrayNode) values;
-            if (values.isArray()) {
-                Map<String, BigDecimal> coinInfo = new HashMap<String, BigDecimal>();
-                int i = 0;
-                for (final JsonNode objNode : values) {
+			    JsonNode values = node.getValue();
+			    ArrayNode datas = (ArrayNode) values;
+			    if (values.isArray()) {
+			        Map<String, BigDecimal> coinInfo = new HashMap<String, BigDecimal>();
+			        int i = 0;
+			        for (final JsonNode objNode : values) {
 
-                    switch (i) {
-                        case 1:
-                            coinInfo.put(ConstantParam.COIN_INFO_PRICE, new BigDecimal(objNode.toString()));
-                            break;
-                        case 2:
-                            coinInfo.put(ConstantParam.COIN_INFO_BUY, new BigDecimal(objNode.toString()));
-                            break;
-                        case 3:
-                            coinInfo.put(ConstantParam.COIN_INFO_SELL, new BigDecimal(objNode.toString()));
-                            break;
-                        case 4:
-                            coinInfo.put(ConstantParam.COIN_INFO_MAX, new BigDecimal(objNode.toString()));
-                            break;
-                        case 5:
-                            coinInfo.put(ConstantParam.COIN_INFO_MIN, new BigDecimal(objNode.toString()));
-                            break;
-                        case 6:
-                            coinInfo.put(ConstantParam.COIN_INFO_SUM, new BigDecimal(objNode.toString()));
-                            break;
-                        case 7:
-                            coinInfo.put(ConstantParam.COIN_INFO_VOLUME, new BigDecimal(objNode.toString()));
-                            break;
-                        default:
-                            break;
-                    }
-                    i++;
-                }
-                coins.put(node.getKey().toString().toUpperCase(), coinInfo);
-            }
+			            switch (i) {
+			                case 1:
+			                    coinInfo.put(ConstantParam.COIN_INFO_PRICE, new BigDecimal(objNode.toString()));
+			                    break;
+			                case 2:
+			                    coinInfo.put(ConstantParam.COIN_INFO_BUY, new BigDecimal(objNode.toString()));
+			                    break;
+			                case 3:
+			                    coinInfo.put(ConstantParam.COIN_INFO_SELL, new BigDecimal(objNode.toString()));
+			                    break;
+			                case 4:
+			                    coinInfo.put(ConstantParam.COIN_INFO_MAX, new BigDecimal(objNode.toString()));
+			                    break;
+			                case 5:
+			                    coinInfo.put(ConstantParam.COIN_INFO_MIN, new BigDecimal(objNode.toString()));
+			                    break;
+			                case 6:
+			                    coinInfo.put(ConstantParam.COIN_INFO_SUM, new BigDecimal(objNode.toString()));
+			                    break;
+			                case 7:
+			                    coinInfo.put(ConstantParam.COIN_INFO_VOLUME, new BigDecimal(objNode.toString()));
+			                    break;
+			                default:
+			                    break;
+			            }
+			            i++;
+			        }
+			        coins.put(node.getKey().toString().toUpperCase(), coinInfo);
+			    }
 
-        }
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         Date endDate = new Date();
         long costSec = endDate.getTime() - startDate.getTime();
         if (log.isInfoEnabled()) {

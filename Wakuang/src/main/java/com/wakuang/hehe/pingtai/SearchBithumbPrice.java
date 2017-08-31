@@ -34,6 +34,7 @@ public class SearchBithumbPrice implements SearchPingtaiPrice {
             case ConstantParam.COINTYPE_DASH:
             case ConstantParam.COINTYPE_ETC:
             case ConstantParam.COINTYPE_XRP:
+            case ConstantParam.COINTYPE_XMR:
                 feeRate = new BigDecimal("0.0015");
                 break;
             default:
@@ -55,6 +56,7 @@ public class SearchBithumbPrice implements SearchPingtaiPrice {
 	            case ConstantParam.COINTYPE_DASH:
 	            case ConstantParam.COINTYPE_ETC:
 	            case ConstantParam.COINTYPE_XRP:
+	            case ConstantParam.COINTYPE_XMR:
 	                depositFee = new BigDecimal("0.01");
 	                break;
 	            case ConstantParam.COINTYPE_CASH:

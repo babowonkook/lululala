@@ -21,7 +21,7 @@ public class SearchBterPrice implements SearchPingtaiPrice {
 
     public Map<String, Map<String, BigDecimal>> getPrice() throws Exception {
         Date startDate = new Date();
-		String coinTypes[] = {ConstantParam.COINTYPE_BTC, ConstantParam.COINTYPE_ETH, ConstantParam.COINTYPE_LTC, ConstantParam.COINTYPE_DASH, ConstantParam.COINTYPE_ETC, ConstantParam.COINTYPE_XMR};
+		String coinTypes[] = {ConstantParam.COINTYPE_BTC, ConstantParam.COINTYPE_ETH, ConstantParam.COINTYPE_LTC, ConstantParam.COINTYPE_DASH, ConstantParam.COINTYPE_ETC, ConstantParam.COINTYPE_XRP, ConstantParam.COINTYPE_XMR};
 		String result;
 		Map<String, Map<String, BigDecimal>> coins = new HashMap<>();
 		String url = "http://data.bter.com/api2/1/tickers";
@@ -63,13 +63,14 @@ public class SearchBterPrice implements SearchPingtaiPrice {
         switch (coinType) {
             case ConstantParam.COINTYPE_BTC:
             case ConstantParam.COINTYPE_DASH:
-                feeRate = new BigDecimal("0.002");
+            case ConstantParam.COINTYPE_XMR:
+                feeRate = new BigDecimal("0.0018");
                 break;
             case ConstantParam.COINTYPE_LTC:
             case ConstantParam.COINTYPE_ETH:
             case ConstantParam.COINTYPE_ETC:
             case ConstantParam.COINTYPE_XRP:
-                feeRate = new BigDecimal("0.001");
+                feeRate = new BigDecimal("0.0009");
                 break;
             default:
                 feeRate = new BigDecimal("100");
@@ -81,31 +82,45 @@ public class SearchBterPrice implements SearchPingtaiPrice {
     public BigDecimal getDepositFee(BigDecimal amt,
                                      String coinType,
                                      String tufaQingkuang) {
+        BigDecimal depositFeeRate = null;
         BigDecimal depositFee = null;
         switch (coinType) {
             case ConstantParam.COINTYPE_BTC:
+            		depositFee = new BigDecimal("0.0006");
+            		break;
             case ConstantParam.COINTYPE_LTC:
+	            	depositFee = new BigDecimal("0.02");
+	        		break;
             case ConstantParam.COINTYPE_ETH:
             case ConstantParam.COINTYPE_ETC:
-                depositFee = new BigDecimal("0.001");
-                break;
+	            	depositFee = new BigDecimal("0.01");
+	        		break;
             case ConstantParam.COINTYPE_DASH:
-                depositFee = new BigDecimal("0.01");
+	            	depositFeeRate = new BigDecimal("0.01");
+	            	depositFee = new BigDecimal("0.02");
+	            	depositFee = amt.multiply(depositFeeRate).add(depositFee);
                 break;
             case ConstantParam.COINTYPE_XRP:
-                depositFee = new BigDecimal("0.00");
+            		depositFee = new BigDecimal("0.00");
                 break;
             case ConstantParam.COINTYPE_CASH:
-            	depositFee = new BigDecimal("0.005");
-            	break;
+            		depositFeeRate = new BigDecimal("0.001");
+            		depositFee = new BigDecimal("2");
+            		depositFee = amt.multiply(depositFeeRate).add(depositFee);
+                	break;
+            case ConstantParam.COINTYPE_XMR:
+            		depositFeeRate = new BigDecimal("0.01");
+            		depositFee = new BigDecimal("0.2");
+            		depositFee = amt.multiply(depositFeeRate).add(depositFee);
+            		break;
             default:
-                depositFee = new BigDecimal("100");
+            	depositFee = new BigDecimal("10000000");
                 break;
         }
     	if("yes".equals(tufaQingkuang)) {
-    		depositFee = new BigDecimal("0.02");
+    		depositFeeRate = new BigDecimal("0.02");
     	}
-        return amt.multiply(depositFee);
+        return depositFee;
     }
 
 }

@@ -56,7 +56,12 @@ public class PingTaiTradeService {
     	SearchPingtaiPrice searchPingtaiPrice = serviceMap.get(plaform);
     	
 		// 전체금액 / 단가 - 매입수수료 - 송금수수료
-		BigDecimal buyCoin = totalPrice.divide(unitCost,8,BigDecimal.ROUND_HALF_UP);
+		BigDecimal buyCoin = new BigDecimal("0");
+		try {
+			buyCoin = totalPrice.divide(unitCost, 8, BigDecimal.ROUND_HALF_UP);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		BigDecimal aftDivideTrakerFeeCoin =  buyCoin.subtract(searchPingtaiPrice.getTakerFee(buyCoin, coinType));
 		BigDecimal aftDepositFeeCoin = aftDivideTrakerFeeCoin.subtract(searchPingtaiPrice.getDepositFee(aftDivideTrakerFeeCoin, coinType, tk));
 		return aftDepositFeeCoin;
