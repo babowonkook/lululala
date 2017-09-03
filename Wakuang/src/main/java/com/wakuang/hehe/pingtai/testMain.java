@@ -7,7 +7,7 @@ public class testMain {
 		System.out.println("hahah");
 		
 		
-        SearchBiduobaoPrice searchJubiPrice = new SearchBiduobaoPrice();
+        SearchJubiPrice searchJubiPrice = new SearchJubiPrice();
 		searchJubiPrice.getPrice();
 		System.out.println("hahah");
 	}

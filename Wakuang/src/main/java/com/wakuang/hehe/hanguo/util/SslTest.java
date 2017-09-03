@@ -35,6 +35,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
@@ -66,7 +67,7 @@ public class SslTest {
     }
     
     public static String getRequest(String url,int timeOut) throws Exception{
-        CloseableHttpClient httpClient = createSSLClientDefault();
+        CloseableHttpClient httpClient = createSSLClientDefault(timeOut);
         HttpGet get = new HttpGet();
         get.setURI(new URI(url));
         HttpResponse res = httpClient.execute(get);
@@ -97,7 +98,7 @@ public class SslTest {
         }
     }
     
-    public static CloseableHttpClient createSSLClientDefault() {
+    public static CloseableHttpClient createSSLClientDefault(int timeout) {
         try {
             SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
                 // 信任所有
@@ -106,8 +107,12 @@ public class SslTest {
                     return true;
                 }
             }).build();
+            RequestConfig config = RequestConfig.custom()
+              .setConnectTimeout(timeout)
+              .setConnectionRequestTimeout(timeout)
+              .setSocketTimeout(timeout).build();
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext);
-            return HttpClients.custom().setSSLSocketFactory(sslsf).build();
+            return HttpClients.custom().setDefaultRequestConfig(config).setSSLSocketFactory(sslsf).build();
         } catch (KeyManagementException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
@@ -119,7 +124,7 @@ public class SslTest {
     }
     
     public static void main(String[] args) throws URISyntaxException, ClientProtocolException, IOException {
-        CloseableHttpClient httpClient = createSSLClientDefault();
+        CloseableHttpClient httpClient = createSSLClientDefault(3000);
         HttpGet get = new HttpGet();
         get.setURI(new URI("https://www.biduobao.com/coin/allcoin?t=123123"));
         HttpResponse res = httpClient.execute(get);
