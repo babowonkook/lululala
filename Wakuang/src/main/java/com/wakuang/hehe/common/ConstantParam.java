@@ -55,6 +55,8 @@ public class ConstantParam {
 	public static final String MAP2 = "map2";
 	public static final String SHOUYI_E = "shouyi_e";
 	public static final String SHOUYI_RATE = "shouyi_rate";
+	public static final String FOREIGN_PRICE = "foreign_price";
+	public static final String NEED_SELL = "need_sell";
 	public static final String TIKUAN_SHOUXU_FEI = "tikuanShouxuFei";
 	public static final String TIKUAN_SHOUXU_FEI_YUAN = "tikuanShouxuFeiYuan";
 	public static final String SHOUYI_E_YUAN = "shouyiEyuan";

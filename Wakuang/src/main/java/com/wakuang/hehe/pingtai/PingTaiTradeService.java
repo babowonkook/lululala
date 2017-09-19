@@ -144,6 +144,43 @@ public class PingTaiTradeService {
         return comparList;
     }
 
+
+    public List<Map<String, Object>> getForeinPrice(String rateCNY,
+                                                String rateJPY,
+                                                String rateUSD,
+                                                String amt,
+                                                String tk) throws Exception {
+
+        BigDecimal CNY = new BigDecimal(rateCNY);
+        BigDecimal JPY = new BigDecimal(rateJPY);
+        BigDecimal USD = new BigDecimal(rateUSD);
+        BigDecimal totalPrice = new BigDecimal(amt);
+        Map<String, SearchPingtaiPrice> serviceMap = initService();
+        SearchPingtaiPrice searchBithumbPrice = serviceMap.get(ConstantParam.PLAFORM_BITHUM);
+        Map<String, Map<String, BigDecimal>> bitumbPrice = searchBithumbPrice.getPrice();
+        String coinTypes[] = { ConstantParam.COINTYPE_BTC, ConstantParam.COINTYPE_ETH, ConstantParam.COINTYPE_LTC, ConstantParam.COINTYPE_DASH, ConstantParam.COINTYPE_ETC, ConstantParam.COINTYPE_XRP };
+        Map<String, Object> temp;
+        Map<String, Object> result = new HashMap<>();
+        Map<String, BigDecimal> coinMap;
+        Map<String, Object> compaireInfo = new HashMap<>();
+        compaireInfo.put(ConstantParam.RESPONSE_PLATFORM1, ConstantParam.PLAFORM_BITHUM);
+        compaireInfo.put(ConstantParam.RESPONSE_PLATFORM2, ConstantParam.PLAFORM_BITHUM);
+        compaireInfo.put(ConstantParam.RESPONSE_EXCHANGERATE, rateCNY);
+        result.put(ConstantParam.RESPONSE_COMPAIRE_INFO, compaireInfo);
+        for (String coin : coinTypes) {
+        		coinMap = bitumbPrice.get(coin);
+        		temp = new HashMap<>();
+        		temp.put(ConstantParam.MAP, coinMap);
+        		temp.put(ConstantParam.FOREIGN_PRICE, coinMap.get(ConstantParam.COIN_INFO_PRICE).divide(CNY, 2, BigDecimal.ROUND_HALF_UP ));
+        		temp.put(ConstantParam.NEED_SELL, coinMap.get(ConstantParam.COIN_INFO_PRICE).divide(CNY, 2, BigDecimal.ROUND_HALF_UP ).multiply(new BigDecimal("0.93")));
+        		result.put(coin, temp);
+        }
+        
+        List<Map<String, Object>> comparList = new ArrayList<>();
+        comparList.add(result);
+        return comparList;
+    }
+    
     public Map<String, Object> compare(Map<String, Map<String, BigDecimal>> result1,
                                        Map<String, Map<String, BigDecimal>> result2,
                                        String pingTaiTp,

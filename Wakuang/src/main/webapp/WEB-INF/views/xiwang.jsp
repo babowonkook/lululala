@@ -102,7 +102,7 @@
         }  
   
         function echo(msg) {  
-        	if(msg == 3) {
+        	if(msg == 4) {
         		onload = true;
         		document.getElementById('echo1').disabled = true;
         	}else if(msg == 2) {
@@ -189,14 +189,10 @@
         	    html = html + "<table id='coinInfo' border='1'>             ";
 	    	    html = html + "	<thead>                                     ";
 	    	    html = html + "		<tr>                                    ";
-	    	    html = html + "		<th width='50'>方向</th>                ";
 	    	    html = html + "		<th width='60'>币种</th>                  ";
 	    	    html = html + "		<th id='plaform1th'>"+jsonComaireDatas[i].COMPAIRE_INFO.PLATFORM1+"价格</th>      ";
-	    	    html = html + "		<th id='plaform1krwth'>"+jsonComaireDatas[i].COMPAIRE_INFO.PLATFORM1+"韩元价格</th>";
-	    	    html = html + "		<th id='plaform2th'>"+jsonComaireDatas[i].COMPAIRE_INFO.PLATFORM2+"价格</th>      ";
-	    	    html = html + "		<th>差价</th>                           ";
-	    	    html = html + "		<th width='50'>收益率</th>              ";
-	    	    html = html + "		<th width='60'>收益额</th>               ";
+	    	    html = html + "		<th>"+jsonComaireDatas[i].COMPAIRE_INFO.PLATFORM1+"人民币价格</th>                           ";
+	    	    html = html + "		<th width='50'>93%收</th>              ";
 	    	    html = html + "		</tr>                                   ";
 	    	    html = html + "	</thead>                                    ";
 	    	    html = html + "	<tbody>                                     ";
@@ -204,34 +200,28 @@
         	    for(var j in jsonComaireDatas[i]){
 	        	    if("COMPAIRE_INFO" != j){
 	        	        var result = jsonComaireDatas[i][j]
-		        		var fromTo = "";
-		        		if(result.compare >= 0){
-		        			fromTo = "<font size='3' color='red'>-></font>"
-		        		}else{
-		        			fromTo = "<font size='3' color='blue'><-</font>"
-		        		}
-		        		
-		        		var trColor = "";
-		        		if(result.shouyi_rate <= 0){
-		        			trColor = "bgcolor='gray'";
-		        		}else if(result.shouyi_rate > 0.03){
-		        			trColor = "bgcolor='green'";
-		        		}
-		        	    html = html + "<tr " + trColor + ">";
-		        	    html = html + "<td>" + fromTo + "</td>";
+
+
+		        	    html = html + "<tr >";
 		        	    html = html + "<td>" + j + "</td>";
+		        	    html = html + "<td>" + formatMoney(result.map.PRICE, 0) + "</td>";
+		        	    
 		        	    html = html + "<td>";
 		        	    if("XRP"==j){
-		        	        html = html + result.map.PRICE;
+		        	        html = html + result.foreign_price;
 		        	    }else{
-			        	    html = html + formatMoney(result.map.PRICE, true);
+		        	    		html = html + formatMoney(result.foreign_price, 0) + "</td>";
 		        	    }
 		        	    html = html + "</td>";
-		        	    html = html + "<td>" + formatMoney(parseFloat((result.map.PRICE) * parseFloat(jsonComaireDatas[i].COMPAIRE_INFO.EXCHANGERATE))+"", 0) + "</td>";
-		        	    html = html + "<td>" + formatMoney(result.map2.PRICE, 0) + "</td>";
-		        	    html = html + "<td>" + formatMoney(result.compare, 0) + "</td>";
-		        	    html = html + "<td>" + ((result.shouyi_rate*100).toFixed(4)) + "%</td>";
-		        	    html = html + "<td>" + formatMoney(result.shouyi_e.toFixed(0)/10000, true) + "</td>";
+		        	    
+		        	    html = html + "<td>";
+		        	    if("XRP"==j){
+		        	        html = html + result.need_sell;
+		        	    }else{
+		        	    		html = html + formatMoney(result.need_sell, 0) + "</td>";
+		        	    }
+		        	    html = html + "</td>";
+		        	    
 		        	    
 		      		  	html = html + "</tr>";
 	        	        
@@ -408,7 +398,7 @@
         </div>  
         <div>  
             <button style="display: none;" id="echo" onclick="echo();" disabled="disabled">Echo message</button>
-            <button id="echo1" onclick="echo('3');" disabled="disabled">START</button>
+            <button id="echo1" onclick="echo('4');" disabled="disabled">START</button>
             <button id="echo2" onclick="echo('2');" disabled="disabled">END</button>
         </div>  
         
