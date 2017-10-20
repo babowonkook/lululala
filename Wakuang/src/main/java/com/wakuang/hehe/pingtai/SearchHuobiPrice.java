@@ -125,5 +125,10 @@ public class SearchHuobiPrice implements SearchPingtaiPrice {
     	}
         return amt.multiply(depositFee);
     }
+	@Override
+	public Map<String, Map<String, BigDecimal>> getPriceByCoin(String coinType) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

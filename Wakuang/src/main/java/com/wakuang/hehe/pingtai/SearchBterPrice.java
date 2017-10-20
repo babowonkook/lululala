@@ -122,5 +122,10 @@ public class SearchBterPrice implements SearchPingtaiPrice {
     	}
         return depositFee;
     }
+	@Override
+	public Map<String, Map<String, BigDecimal>> getPriceByCoin(String coinType) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

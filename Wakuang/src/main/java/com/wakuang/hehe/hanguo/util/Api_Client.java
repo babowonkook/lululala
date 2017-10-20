@@ -32,7 +32,7 @@ public class Api_Client {
     }
 
     /**
-     * ������ �ð��� ns�� �����Ѵ�.(1/1,000,000,000 ��)
+     * 현재의 시간을 ns로 리턴한다.(1/1,000,000,000 초)
      * 
      * @return int
      */
@@ -55,7 +55,7 @@ public class Api_Client {
     private String request(String strHost, String strMemod, HashMap<String, String> rgParams,  HashMap<String, String> httpHeaders) {
     	String response = "";
 
-		// SSL ����
+		// SSL 여부
 		if (strHost.startsWith("https://")) {
 		    HttpRequest request = HttpRequest.get(strHost);
 		    // Accept all certificates
@@ -68,7 +68,7 @@ public class Api_Client {
 		} else {
 		    HttpRequest request = null;
 	
-		    // POST/GET ����
+		    // POST/GET 설정
 		    if (strMemod.toUpperCase().equals("POST")) {
 	
 			request = new HttpRequest(strHost, "POST");
@@ -208,13 +208,13 @@ public class Api_Client {
 		rgResultDecode = request(api_host, "POST", rgParams, httpHeaders);
 	
 		if (!rgResultDecode.startsWith("error")) {
-		    // json �Ľ�
+		    // json 파싱
 		    HashMap<String, String> result;
 		    try {
 			result = new ObjectMapper().readValue(rgResultDecode,
 				HashMap.class);
 	
-			System.out.println("==== ��� ��� ====");
+			System.out.println("==== 결과 출력 ====");
 			System.out.println(result.get("status"));
 		    } catch (IOException e) {
 			e.printStackTrace();

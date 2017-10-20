@@ -46,6 +46,10 @@ public class PingTaiTradeService {
     @Autowired
     @Qualifier("okCoinService")
     private SearchOKCoinPrice    searchOKCoinPrice;
+    
+    @Autowired
+    @Qualifier("bitfinexService")
+    private SearchBitfinexPrice    searchBitfinexPrice;
 
     public BigDecimal buyCoin(String plaform,
             String coinType,
@@ -143,6 +147,25 @@ public class PingTaiTradeService {
         // comparList.add(compare5);
         return comparList;
     }
+    
+    public List<Map<String, Object>> compareC2CAll(String rateCNY,
+										    	   String amt,
+										    	   String targetCoin) throws Exception {
+    	
+    	BigDecimal CNY = new BigDecimal(rateCNY);
+    	BigDecimal totalPrice = new BigDecimal(amt);
+    	Map<String, SearchPingtaiPrice> serviceMap = initService();
+    	SearchPingtaiPrice searchBithumbPrice = serviceMap.get(ConstantParam.PLAFORM_BITHUM);
+    	SearchPingtaiPrice searchBitfinexPrice = serviceMap.get(ConstantParam.PLAFORM_BITFINEX);
+
+    	Map<String, Map<String, BigDecimal>> bitumbPrice = searchBithumbPrice.getPriceByCoin(targetCoin);
+    	Map<String, Map<String, BigDecimal>> bitfinexPrice = searchBitfinexPrice.getPriceByCoin(targetCoin);
+   
+    	List<Map<String, Object>> comparList = new ArrayList<>();
+    	Map<String, Object> compare1 = compareC2C(bitfinexPrice, bitumbPrice, ConstantParam.PLAFORM_BITFINEX, ConstantParam.PLAFORM_BITHUM, totalPrice, BigDecimal.ONE,"");
+    	comparList.add(compare1);
+    	return comparList;
+    }
 
 
     public List<Map<String, Object>> getForeinPrice(String rateCNY,
@@ -233,6 +256,59 @@ public class PingTaiTradeService {
         }
         return result;
     }
+    
+    public Map<String, Object> compareC2C(Map<String, Map<String, BigDecimal>> result1,
+    		Map<String, Map<String, BigDecimal>> result2,
+    		String pingTaiTp,
+    		String pingTaiTp2,
+    		BigDecimal totalPrice,
+    		BigDecimal rateChange,
+    		String tk) {
+    	String coinTypes[] = { ConstantParam.COINTYPE_BTC, ConstantParam.COINTYPE_ETH, ConstantParam.COINTYPE_LTC, ConstantParam.COINTYPE_DASH, ConstantParam.COINTYPE_ETC, ConstantParam.COINTYPE_XRP };
+    	Map<String, Object> result = new HashMap<>();
+    	Map<String, BigDecimal> coinMap;
+    	Map<String, BigDecimal> coinMap2;
+    	BigDecimal compareValue;
+    	Map<String, Object> temp;
+    	
+    	Map<String, Object> compaireInfo = new HashMap<>();
+    	compaireInfo.put(ConstantParam.RESPONSE_PLATFORM1, pingTaiTp);
+    	compaireInfo.put(ConstantParam.RESPONSE_PLATFORM2, pingTaiTp2);
+    	compaireInfo.put(ConstantParam.RESPONSE_EXCHANGERATE, rateChange);
+    	result.put(ConstantParam.RESPONSE_COMPAIRE_INFO, compaireInfo);
+    	for (String coin : coinTypes) {
+    		if (result1.get(coin) != null && result2.get(coin) != null) {
+    			coinMap = result1.get(coin);
+    			coinMap2 = result2.get(coin);
+    			compareValue = coinMap2.get(ConstantParam.COIN_INFO_COINPRICE).subtract(coinMap.get(ConstantParam.COIN_INFO_COINPRICE).multiply(rateChange));
+    			temp = new HashMap<>();
+    			// 平台1 > 平台2
+    			// 平台1 卖， 平台2买
+    			
+    			// 收益率， 收益额
+    			if (compareValue.compareTo(BigDecimal.ZERO) == 1) {
+    				BigDecimal coinCnt = buyCoin(pingTaiTp, coin, totalPrice, coinMap.get(ConstantParam.COIN_INFO_COISELLPRICE), tk);
+    				BigDecimal sellAmt = sellCoin(pingTaiTp2, coin, coinCnt, coinMap2.get(ConstantParam.COIN_INFO_COINBUYPRICE), tk);
+    				BigDecimal shouYi_e = sellAmt.subtract(totalPrice);
+    				BigDecimal shouYiRate = shouYi_e.divide(totalPrice, 4, BigDecimal.ROUND_HALF_UP);
+    				temp.put(ConstantParam.SHOUYI_E, shouYi_e.setScale(0, BigDecimal.ROUND_HALF_UP));
+    				temp.put(ConstantParam.SHOUYI_RATE, shouYiRate.setScale(4, BigDecimal.ROUND_HALF_UP));
+    			} else {
+    				BigDecimal coinCnt = buyCoin(pingTaiTp2, coin, totalPrice, coinMap2.get(ConstantParam.COIN_INFO_COISELLPRICE), tk);
+    				BigDecimal sellAmt = sellCoin(pingTaiTp, coin, coinCnt, coinMap.get(ConstantParam.COIN_INFO_COINBUYPRICE), tk);
+    				BigDecimal shouYi_e = sellAmt.multiply(rateChange).subtract(totalPrice);
+    				BigDecimal shouYiRate = shouYi_e.divide(totalPrice, 4, BigDecimal.ROUND_HALF_UP);
+    				temp.put(ConstantParam.SHOUYI_E, shouYi_e.setScale(0, BigDecimal.ROUND_HALF_UP));
+    				temp.put(ConstantParam.SHOUYI_RATE, shouYiRate.setScale(4, BigDecimal.ROUND_HALF_UP));
+    			}
+    			temp.put(ConstantParam.COMPARE, compareValue);
+    			temp.put(ConstantParam.MAP, coinMap);
+    			temp.put(ConstantParam.MAP2, coinMap2);
+    			result.put(coin, temp);
+    		}
+    	}
+    	return result;
+    }
 
 	private Map<String, SearchPingtaiPrice> initService() {
 		Map<String, SearchPingtaiPrice> rs = new HashMap<>();
@@ -244,6 +320,7 @@ public class PingTaiTradeService {
         rs.put(ConstantParam.PLAFORM_BTCE, searchBtcePrice);
         rs.put(ConstantParam.PLAFORM_HUOBI, searchHuobiPrice);
         rs.put(ConstantParam.PLAFORM_OKCOIN, searchOKCoinPrice);
+        rs.put(ConstantParam.PLAFORM_BITFINEX, searchBitfinexPrice);
 		return rs;
 	}
 	

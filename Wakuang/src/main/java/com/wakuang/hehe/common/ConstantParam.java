@@ -13,6 +13,7 @@ public class ConstantParam {
     public static final String PLAFORM_BTCE           = "BTCE";
     public static final String PLAFORM_BETR           = "BETR";
     public static final String PLAFORM_HUOBI          = "HUOBI";
+    public static final String PLAFORM_BITFINEX       = "BITFINEX";
 
     public static final String COINTYPE_BTC           = "BTC";
     public static final String COINTYPE_BCH           = "BCH";
@@ -49,6 +50,9 @@ public class ConstantParam {
     public static final String COIN_INFO_MIN          = "MIN";
     public static final String COIN_INFO_SUM          = "SUM";
     public static final String COIN_INFO_VOLUME       = "VOLUME";
+    public static final String COIN_INFO_COINBUYPRICE    = "COINBUYPRICE";
+    public static final String COIN_INFO_COISELLPRICE    = "COINSELLPRICE";
+    public static final String COIN_INFO_COINPRICE    = "COINPRICE";
 
 	public static final String COMPARE = "compare";
 	public static final String MAP = "map";

@@ -82,7 +82,11 @@ public class SystemWebSocketHandler implements WebSocketHandler {
             userType.put(webSocketSession, ConstantParam.Y);
             excutorService.execute(new SocketSendXiwangMessage(webSocketSession, userType, service, rateCNY, rateJPY, rateUSD, totalPrice, tufaQingkuang));
             excutorService.shutdown();
-        } else if("2".equals(type)) {
+        } else if ("5".equals(type) && userType.get(webSocketSession) == null || ConstantParam.N.equals(userType.get(webSocketSession))) {
+            userType.put(webSocketSession, ConstantParam.Y);
+            excutorService.execute(new SocketSendC2CAllMessage(webSocketSession, userType, service, jsonNode));
+            excutorService.shutdown();
+        }else if("2".equals(type)) {
         	userType.put(webSocketSession, ConstantParam.N);
         }
 	}

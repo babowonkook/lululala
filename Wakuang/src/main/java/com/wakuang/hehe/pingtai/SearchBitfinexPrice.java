@@ -16,12 +16,10 @@ import com.wakuang.hehe.hanguo.service.HanguoService;
 import com.wakuang.hehe.hanguo.util.SslTest;
 import com.wakuang.hehe.utils.WakuangStringUtils;
 
-@Service(value = "bithumbService")
-public class SearchBithumbPrice implements SearchPingtaiPrice {
-    private Logger        log = LoggerFactory.getLogger(SearchBithumbPrice.class);
+@Service(value = "bitfinexService")
+public class SearchBitfinexPrice implements SearchPingtaiPrice {
+    private Logger        log = LoggerFactory.getLogger(SearchBitfinexPrice.class);
 	
-	@Autowired
-	private HanguoService hanguoSerivce;
 	
 	@Override
 	public BigDecimal getTakerFee(BigDecimal amt, String coinType) {
@@ -106,37 +104,37 @@ public class SearchBithumbPrice implements SearchPingtaiPrice {
 
 	@Override
 	public Map<String, Map<String, BigDecimal>> getPriceByCoin(String coinType) throws Exception {
-		// TODO Auto-generated method stub
-		
-		// 1. 코인 가격구함
-		Map<String, Map<String, BigDecimal>>prices = getPrice();
-		// 2. 코인 가격큼 비트코인 구매 해야할 겟수(코인 비트코인 겟)
-		
-		String coinTypes[] = { ConstantParam.COINTYPE_BTC, ConstantParam.COINTYPE_ETH, ConstantParam.COINTYPE_LTC, ConstantParam.COINTYPE_DASH, ConstantParam.COINTYPE_ETC, ConstantParam.COINTYPE_XRP, ConstantParam.COINTYPE_BCH };
-		
-		BigDecimal tradeCoinBuyPrice = prices.get(coinType).get(ConstantParam.COIN_INFO_BUY);
-		BigDecimal tradeCoinSellPrice = prices.get(coinType).get(ConstantParam.COIN_INFO_SELL);
-		BigDecimal tradeCoinPrice = prices.get(coinType).get(ConstantParam.COIN_INFO_PRICE);
-		for (String coin : coinTypes) {
-			Map<String, BigDecimal> coinInfo = prices.get(coin);
-			BigDecimal coinBuyPrice = coinInfo.get(ConstantParam.COIN_INFO_BUY);
-			BigDecimal coinSellPrice = coinInfo.get(ConstantParam.COIN_INFO_SELL);
-			BigDecimal coinPrice = coinInfo.get(ConstantParam.COIN_INFO_PRICE);
-			
-			// 중간코인 구매가에 팔아서 타겟코인 판매가에  구입 
-			BigDecimal coinBuyNum = coinSellPrice.divide(tradeCoinBuyPrice, 8, BigDecimal.ROUND_UP);
-			
-			// 타겟코인 구매가에 팔아서 중간코인 판매가에 구입
-			BigDecimal coinSellNum = coinBuyPrice.divide(tradeCoinSellPrice, 8, BigDecimal.ROUND_UP);
-			BigDecimal coinNum = coinPrice.divide(tradeCoinPrice, 8, BigDecimal.ROUND_UP);
-			coinInfo.put(ConstantParam.COIN_INFO_COINBUYPRICE, coinBuyNum);
-			coinInfo.put(ConstantParam.COIN_INFO_COISELLPRICE, coinSellNum);
-			coinInfo.put(ConstantParam.COIN_INFO_COINPRICE, coinNum);
-		    log.info("coninType : "+coin+" coinBuyNum {}, coinSellNum {}", coinBuyNum.toString(), coinSellNum.toString());
-		}
-		
-		
-		return prices;
+		 Date startDate = new Date();
+	        String coinTypes[] = { ConstantParam.COINTYPE_BTC, ConstantParam.COINTYPE_ETH, ConstantParam.COINTYPE_LTC, ConstantParam.COINTYPE_DASH, ConstantParam.COINTYPE_ETC, ConstantParam.COINTYPE_XRP, ConstantParam.COINTYPE_BCH };
+			String result;
+			Map<String, Map<String, BigDecimal>> coins = new HashMap<>();
+	        for (String coin : coinTypes) {
+                String url = "https://api.bitfinex.com/v1/pubticker/";
+                if(!coin.equalsIgnoreCase(coinType)) {
+                	url = url + coin.toLowerCase() + coinType.toLowerCase();
+                    result = SslTest.getRequest(url, 3000);
+                    JsonNode rootNode = WakuangStringUtils.stringToJsonNode(result);
+                    if (rootNode != null) {
+                        JsonNode tick = rootNode;
+                        Map<String, BigDecimal> coinInfo = new HashMap<String, BigDecimal>();
+                        coinInfo.put(ConstantParam.COIN_INFO_MAX, BigDecimal.ZERO);
+                        coinInfo.put(ConstantParam.COIN_INFO_MIN, BigDecimal.ZERO);
+                        coinInfo.put(ConstantParam.COIN_INFO_COINBUYPRICE, new BigDecimal(tick.get("bid").asText()));
+                        coinInfo.put(ConstantParam.COIN_INFO_COISELLPRICE, new BigDecimal(tick.get("ask").asText()));
+                        coinInfo.put(ConstantParam.COIN_INFO_COINPRICE, new BigDecimal(tick.get("ask").asText()));
+                        coins.put(coin, coinInfo);
+                    }
+                }
+                
+	        }
+
+	        Date endDate = new Date();
+	        long costSec = endDate.getTime() - startDate.getTime();
+	        if (log.isInfoEnabled()) {
+	            log.info("cost Time: {} seconds", costSec / 1000);
+	            log.info(ConstantParam.PLAFORM_BITFINEX + ":  " + coins.toString());
+	        }
+			return coins;
 	}
 
 }

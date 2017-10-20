@@ -33,4 +33,15 @@ public abstract interface SearchPingtaiPrice {
 	 * @throws Exception
 	 */
     public Map<String, Map<String, BigDecimal>> getPrice() throws Exception;
+    
+    
+	/**
+	 * @MethodName : getPrice
+	 * @Description : 플렛폼 시세구하기(코인가)
+	 * @Date : 2017. 6. 16.
+	 * @Author : 황원국
+	 * @return
+	 * @throws Exception
+	 */
+    public Map<String, Map<String, BigDecimal>> getPriceByCoin(String coinType) throws Exception;
 }
