@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.wakuang.hehe.common.ConstantParam;
 import com.wakuang.hehe.hanguo.service.HanguoService;
+import com.wakuang.hehe.hanguo.util.Api_Client;
 import com.wakuang.hehe.hanguo.util.SslTest;
 import com.wakuang.hehe.utils.WakuangStringUtils;
 
@@ -138,5 +139,23 @@ public class SearchBithumbPrice implements SearchPingtaiPrice {
 		
 		return prices;
 	}
+	
+	public Map<String, Map<String, BigDecimal>> getBalance() throws Exception {
+			Api_Client api = new Api_Client("api connect key", "api secret key");
+		
+			HashMap<String, String> rgParams = new HashMap<String, String>();
+			rgParams.put("order_currency", "BTC");
+			rgParams.put("payment_currency", "KRW");
+		
+		
+			try {
+			    String result = api.callApi("/info/balance", rgParams);
+			    System.out.println(result);
+			} catch (Exception e) {
+			    e.printStackTrace();
+			}
+		return null;
+	}
+	
 
 }
