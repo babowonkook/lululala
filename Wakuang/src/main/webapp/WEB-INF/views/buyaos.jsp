@@ -4,7 +4,7 @@
 <%@ page session="false" %>
 <html>  
 <head>  
-<!-- <script type="text/javascript" src="/resource/js/jquery-3.2.1.js"/> -->
+<script type="text/javascript" src="/resource/js/jquery-3.2.1.js"/>
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
 <title>WebSocket/SockJS Echo Sample (Adapted from Tomcat's echo sample)</title>  

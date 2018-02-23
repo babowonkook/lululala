@@ -3,26 +3,30 @@ package com.wakuang.hehe.pingtai;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.wakuang.hehe.common.ConstantParam;
-import com.wakuang.hehe.hanguo.service.HanguoService;
+import com.wakuang.hehe.hanguo.service.CodeService;
 import com.wakuang.hehe.hanguo.util.Api_Client;
 import com.wakuang.hehe.hanguo.util.SslTest;
 import com.wakuang.hehe.utils.WakuangStringUtils;
+
 
 @Service(value = "bithumbService")
 public class SearchBithumbPrice implements SearchPingtaiPrice {
     private Logger        log = LoggerFactory.getLogger(SearchBithumbPrice.class);
 	
-	@Autowired
-	private HanguoService hanguoSerivce;
+	@Autowired 
+	@Qualifier("codeServiceSourceImpl")
+    CodeService codeService;
 	
 	@Override
 	public BigDecimal getTakerFee(BigDecimal amt, String coinType) {
@@ -141,15 +145,31 @@ public class SearchBithumbPrice implements SearchPingtaiPrice {
 	}
 	
 	public Map<String, Map<String, BigDecimal>> getBalance() throws Exception {
-			Api_Client api = new Api_Client("api connect key", "api secret key");
+			Api_Client api = new Api_Client("11", "22");
 		
 			HashMap<String, String> rgParams = new HashMap<String, String>();
-			rgParams.put("order_currency", "BTC");
-			rgParams.put("payment_currency", "KRW");
+			rgParams.put("currency", "ALL");
 		
+			List<Map<String, String>> coinList = (List<Map<String, String>>) codeService.getCode("CD002");
+			List<Map<String, String>> balanceTpList = (List<Map<String, String>>) codeService.getCode("CD003");
 		
 			try {
 			    String result = api.callApi("/info/balance", rgParams);
+			    
+			    JsonNode rootNode = WakuangStringUtils.stringToJsonNode(result).get("data");
+			    if (rootNode != null) {
+			    	Map<String, Map<String, String>> coin = new HashMap<>();
+			    		for(int i = 0 ; i < coinList.size(); i++) {
+			    			Map<String, String> balance = new HashMap<>();
+			    			for(int j = 0 ; j < balanceTpList.size(); j++) {
+			    				String value = rootNode.get(balanceTpList.get(j)+"_"+coinList.get(i).toString().toLowerCase()).toString();
+			    				balance.put(balanceTpList.get(j).toString(), value);
+			    			}
+			    			coin.put(coinList.get(i).toString(), balance);
+			    		}
+			    		System.out.println(coin);
+			    }
+			    
 			    System.out.println(result);
 			} catch (Exception e) {
 			    e.printStackTrace();

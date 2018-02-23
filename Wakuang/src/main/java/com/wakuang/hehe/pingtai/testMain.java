@@ -10,12 +10,16 @@ public class testMain {
 		System.out.println("hahah");
 		
 		
-        SearchBitfinexPrice searchBitfinexPrice = new SearchBitfinexPrice();
-        Map<String, Map<String, BigDecimal>> prices = searchBitfinexPrice.getPriceByCoin("BTC");
-		System.out.println("hahah");
+//        SearchBitfinexPrice searchBitfinexPrice = new SearchBitfinexPrice();
+//        Map<String, Map<String, BigDecimal>> prices = searchBitfinexPrice.getPriceByCoin("BTC");
+//		System.out.println("hahah");
+//		
+//		SearchBithumbPrice searchBithumbPrice = new SearchBithumbPrice();
+//		Map<String, Map<String, BigDecimal>> bithumbPrices = searchBithumbPrice.getPriceByCoin("BTC");
+//		System.out.println("hahah");
 		
 		SearchBithumbPrice searchBithumbPrice = new SearchBithumbPrice();
-		Map<String, Map<String, BigDecimal>> bithumbPrices = searchBithumbPrice.getPriceByCoin("BTC");
+		Map<String, Map<String, BigDecimal>> haha = searchBithumbPrice.getBalance();
 		System.out.println("hahah");
 	}
 

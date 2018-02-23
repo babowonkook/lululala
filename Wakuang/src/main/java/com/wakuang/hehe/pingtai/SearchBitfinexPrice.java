@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.wakuang.hehe.common.ConstantParam;
-import com.wakuang.hehe.hanguo.service.HanguoService;
 import com.wakuang.hehe.hanguo.util.SslTest;
 import com.wakuang.hehe.utils.WakuangStringUtils;
 
